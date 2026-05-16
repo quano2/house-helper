@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 
 type Props = {
   label: string
@@ -32,6 +32,17 @@ export function Field({
   const displayValue = asPercent ? Number((value * 100).toFixed(4)) : value
   const displayStep = step ?? (asPercent ? 0.1 : 1)
 
+  // Hold the visible text locally so the user can freely clear, partially edit,
+  // or type things like "5." without React snapping the field back. Commit a
+  // number to parent state only when the text parses cleanly; on blur, fall
+  // back to the last committed value if the text was left empty/invalid.
+  const [text, setText] = useState(String(displayValue))
+  const [focused, setFocused] = useState(false)
+
+  useEffect(() => {
+    if (!focused) setText(String(displayValue))
+  }, [displayValue, focused])
+
   return (
     <label className="block">
       <div className="flex items-baseline justify-between">
@@ -41,12 +52,22 @@ export function Field({
       <input
         type="number"
         className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-        value={Number.isFinite(displayValue) ? displayValue : ''}
+        value={text}
         min={min}
         max={max}
         step={displayStep}
+        onFocus={() => setFocused(true)}
+        onBlur={() => {
+          setFocused(false)
+          if (text === '' || !Number.isFinite(Number(text))) {
+            setText(String(displayValue))
+          }
+        }}
         onChange={(e) => {
-          const v = e.target.valueAsNumber
+          const next = e.target.value
+          setText(next)
+          if (next === '') return
+          const v = Number(next)
           if (Number.isFinite(v)) {
             onChange(asPercent ? v / 100 : v)
           }
