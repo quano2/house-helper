@@ -1,6 +1,8 @@
-import { TrendingDown, TrendingUp } from 'lucide-react'
+import { useState } from 'react'
+import { Info, TrendingDown, TrendingUp } from 'lucide-react'
 import type { Inputs, SimulationResult } from '../finance/types'
 import { formatGBP } from '../utils/format'
+import { AssumptionsModal } from './AssumptionsModal'
 import { BreakEvenChart } from './BreakEvenChart'
 import { MonteCarloPanel } from './MonteCarloPanel'
 
@@ -12,6 +14,7 @@ type Props = {
 }
 
 export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: Props) {
+  const [assumptionsOpen, setAssumptionsOpen] = useState(false)
   const finalYear = result.years[result.years.length - 1]
   const buyWins = finalYear ? finalYear.buyMinusRent >= 0 : false
 
@@ -29,6 +32,7 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
 
   return (
     <div className="space-y-6">
+      <AssumptionsModal open={assumptionsOpen} onClose={() => setAssumptionsOpen(false)} />
       <div className={`rounded-2xl border-2 p-8 shadow-md ${verdictClasses}`}>
         <div className="flex items-start gap-5">
           <div className="rounded-full bg-white/70 dark:bg-slate-900/60 p-3 shadow-sm shrink-0">
@@ -49,6 +53,14 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
                 ? `Buying overtakes renting in year ${result.breakEvenYear}.`
                 : 'Buying never overtakes renting within this horizon.'}
             </p>
+            <button
+              type="button"
+              onClick={() => setAssumptionsOpen(true)}
+              className="mt-3 inline-flex items-center gap-1 text-xs text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-slate-200 hover:underline print:hidden"
+            >
+              <Info className="h-3 w-3" />
+              How this is calculated
+            </button>
           </div>
         </div>
       </div>
