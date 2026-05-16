@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Layer, Rectangle, Sankey, Tooltip } from 'recharts'
+import { Layer, Rectangle, ResponsiveContainer, Sankey, Tooltip } from 'recharts'
 import { GitFork } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { amortisationSchedule, monthlyMortgagePayment } from '../finance/mortgage'
@@ -107,19 +107,19 @@ export function SankeyDiagram({ inputs, isDark = false }: Props) {
       </div>
 
       <div className="w-full h-[360px]">
-        <Sankey
-          width={600}
-          height={360}
-          data={data}
-          nodePadding={20}
-          nodeWidth={12}
-          linkCurvature={0.5}
-          iterations={32}
-          node={<SankeyNode fill={nodeColour} text={textColour} />}
-          link={{ stroke: nodeColour, strokeOpacity: 0.15 }}
-        >
-          <Tooltip content={<SankeyTooltip isDark={isDark} />} />
-        </Sankey>
+        <ResponsiveContainer width="100%" height="100%">
+          <Sankey
+            data={data}
+            nodePadding={20}
+            nodeWidth={12}
+            linkCurvature={0.5}
+            iterations={32}
+            node={<SankeyNode fill={nodeColour} text={textColour} />}
+            link={{ stroke: nodeColour, strokeOpacity: 0.15 }}
+          >
+            <Tooltip content={<SankeyTooltip isDark={isDark} />} />
+          </Sankey>
+        </ResponsiveContainer>
       </div>
 
       <p className="mt-4 text-xs text-stone-500 dark:text-slate-400 leading-relaxed">
