@@ -118,16 +118,7 @@ export function SankeyDiagram({ inputs, isDark = false }: Props) {
           node={<SankeyNode fill={nodeColour} text={textColour} />}
           link={{ stroke: nodeColour, strokeOpacity: 0.15 }}
         >
-          <Tooltip
-            formatter={(v) => (typeof v === 'number' ? formatGBP(v) : String(v ?? ''))}
-            contentStyle={{
-              borderRadius: 8,
-              border: `1px solid ${isDark ? '#334155' : '#e7e5e4'}`,
-              background: isDark ? '#0f172a' : '#ffffff',
-              color: isDark ? '#f1f5f9' : '#1c1917',
-              fontSize: 12,
-            }}
-          />
+          <Tooltip content={<SankeyTooltip isDark={isDark} />} />
         </Sankey>
       </div>
 
@@ -146,6 +137,81 @@ export function SankeyDiagram({ inputs, isDark = false }: Props) {
         </span>{' '}
         is sunk into the cost of owning.
       </p>
+    </div>
+  )
+}
+
+// Strip the appended amount from a node name ("Equity built · £420K" → "Equity built")
+function stripAmount(name: string): string {
+  const i = name.indexOf(' · ')
+  return i >= 0 ? name.slice(0, i) : name
+}
+
+// Custom Sankey tooltip — clean source → target with the value once
+type RechartsTooltipPayload = {
+  payload?: {
+    source?: number | { name?: string }
+    target?: number | { name?: string }
+    sourceNodes?: { name?: string }[]
+    targetNodes?: { name?: string }[]
+    value?: number
+    name?: string
+  }
+}
+
+function SankeyTooltip({
+  active,
+  payload,
+  isDark,
+}: {
+  active?: boolean
+  payload?: RechartsTooltipPayload[]
+  isDark?: boolean
+}) {
+  if (!active || !payload?.length) return null
+  const data = payload[0]?.payload
+  if (!data) return null
+
+  const bg = isDark ? '#0f172a' : '#ffffff'
+  const border = isDark ? '#334155' : '#e7e5e4'
+  const text = isDark ? '#f1f5f9' : '#1c1917'
+  const muted = isDark ? '#94a3b8' : '#78716c'
+
+  // Node hover (single name, no source/target)
+  if (data.name && data.source === undefined) {
+    return (
+      <div
+        style={{ background: bg, border: `1px solid ${border}`, color: text }}
+        className="rounded-md px-3 py-2 text-xs shadow-md"
+      >
+        <span className="font-semibold tabular-nums">{stripAmount(data.name)}</span>
+      </div>
+    )
+  }
+
+  // Link hover — pull source/target names from the structure recharts provides
+  const sourceName =
+    typeof data.source === 'object' && data.source?.name
+      ? data.source.name
+      : data.sourceNodes?.[0]?.name
+  const targetName =
+    typeof data.target === 'object' && data.target?.name
+      ? data.target.name
+      : data.targetNodes?.[0]?.name
+
+  return (
+    <div
+      style={{ background: bg, border: `1px solid ${border}`, color: text }}
+      className="rounded-md px-3 py-2 text-xs shadow-md"
+    >
+      {sourceName && targetName && (
+        <div style={{ color: muted }} className="mb-1">
+          {stripAmount(sourceName)} → {stripAmount(targetName)}
+        </div>
+      )}
+      <div className="font-semibold tabular-nums">
+        {typeof data.value === 'number' ? formatGBP(data.value) : ''}
+      </div>
     </div>
   )
 }
