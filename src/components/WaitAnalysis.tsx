@@ -16,12 +16,16 @@ export function WaitAnalysis({ inputs }: Props) {
       WAIT_OPTIONS.filter((w) => w < inputs.yearsToSimulate).map((wait) => {
         const result = simulateWithDelay(inputs, wait)
         const final = result.years[result.years.length - 1]
+        // House price at the moment of purchase (current × growth^wait years).
+        // Don't use final.houseValue — that's the year-N value (much higher).
+        const purchaseTimePrice =
+          inputs.housePrice * Math.pow(1 + inputs.houseAppreciationAnnual, wait)
         return {
           wait,
           buyNW: final?.buyNetWorth ?? 0,
           rentNW: final?.rentNetWorth ?? 0,
           diff: final?.buyMinusRent ?? 0,
-          futureHousePrice: final?.houseValue ?? inputs.housePrice,
+          purchaseTimePrice,
         }
       }),
     [inputs],
@@ -85,7 +89,7 @@ export function WaitAnalysis({ inputs }: Props) {
                     {r.wait === 0 ? 'Buy now' : `${r.wait}y`}
                   </td>
                   <td className="px-2 py-2 text-right tabular-nums text-stone-700 dark:text-slate-300">
-                    {r.wait === 0 ? formatGBP(inputs.housePrice) : formatGBP(r.futureHousePrice)}
+                    {formatGBP(r.purchaseTimePrice)}
                   </td>
                   <td className="px-2 py-2 text-right tabular-nums text-stone-700 dark:text-slate-300">
                     {formatGBP(r.buyNW)}
