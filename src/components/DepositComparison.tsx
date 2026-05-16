@@ -3,11 +3,13 @@ import { ExternalLink, Scale, X } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { simulate } from '../finance/simulate'
 import { formatGBP } from '../utils/format'
+import { Field } from './Field'
 
 type Props = {
   open: boolean
   inputs: Inputs
   onApply: (depositAmount: number, mortgageRate: number) => void
+  onUpdateAvailableCapital: (v: number) => void
   onClose: () => void
 }
 
@@ -51,7 +53,13 @@ function spreadForLtv(ltv: number): number {
   return closest.spreadAboveBest
 }
 
-export function DepositComparison({ open, inputs, onApply, onClose }: Props) {
+export function DepositComparison({
+  open,
+  inputs,
+  onApply,
+  onUpdateAvailableCapital,
+  onClose,
+}: Props) {
   const ref = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -141,6 +149,20 @@ export function DepositComparison({ open, inputs, onApply, onClose }: Props) {
           >
             <X className="h-5 w-5" />
           </button>
+        </div>
+
+        <div className="rounded-md bg-amber-50/60 dark:bg-sky-950/40 border border-amber-200 dark:border-sky-900 px-4 py-3 mb-4">
+          <Field
+            label="Total cash to allocate"
+            prefix="£"
+            unit="optional"
+            hint="If you have a fixed pool (e.g. £200,000) and want to compare deposit sizes fairly, enter it here. Each row will hold the rent-path investment constant — so the comparison is 'what's the best split between deposit and investment?' rather than each row using a different starting capital. Leave at 0 to keep the original per-row K."
+            value={inputs.availableCapital}
+            onChange={onUpdateAvailableCapital}
+            min={0}
+            step={5000}
+            thousands
+          />
         </div>
 
         <div className="overflow-x-auto -mx-2">
