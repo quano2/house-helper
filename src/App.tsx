@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
+import { ukAreas } from './area/data'
+import { AreaPanel } from './components/AreaPanel'
 import { HeaderActions } from './components/HeaderActions'
 import { InputForm } from './components/InputForm'
 import { ResultsPanel } from './components/ResultsPanel'
@@ -10,6 +12,21 @@ import { readInputsFromUrl, writeInputsToUrl } from './utils/url'
 function App() {
   const [inputs, setInputs] = useState(() => readInputsFromUrl())
   const [isDark, setIsDark] = useState(false)
+
+  // Track which area's averages currently match the form (if any) so chips
+  // and map pins can show an "active" state.
+  const activeAreaId = useMemo(() => {
+    const match = ukAreas.find(
+      (a) =>
+        a.averageHousePrice === inputs.housePrice &&
+        a.averageMonthlyRent === inputs.monthlyRent,
+    )
+    return match?.id ?? null
+  }, [inputs.housePrice, inputs.monthlyRent])
+
+  function applyArea(housePrice: number, monthlyRent: number) {
+    setInputs({ ...inputs, housePrice, monthlyRent })
+  }
 
   // Keep the URL in sync with the current inputs — share/bookmark friendly.
   useEffect(() => {
@@ -40,6 +57,7 @@ function App() {
       </header>
 
       <main className="mx-auto max-w-6xl px-6 py-8">
+        <AreaPanel onApply={applyArea} activeAreaId={activeAreaId} />
         <SavedScenarios current={inputs} onLoad={setInputs} />
 
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-8">
