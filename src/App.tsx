@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 import { InputForm } from './components/InputForm'
 import { ResultsPanel } from './components/ResultsPanel'
-import { ScenarioChips } from './components/ScenarioChips'
 import { defaultInputs } from './finance/defaults'
 import { simulate } from './finance/simulate'
 import { themes } from './themes'
@@ -40,7 +39,6 @@ function App() {
       <main className="mx-auto max-w-6xl px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-8">
           <section className={theme.formColumnWrapper}>
-            <ScenarioChips current={inputs} onSelect={setInputs} />
             <InputForm inputs={inputs} onChange={setInputs} />
           </section>
           <section>
