@@ -15,12 +15,16 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
   const finalYear = result.years[result.years.length - 1]
   const buyWins = finalYear ? finalYear.buyMinusRent >= 0 : false
 
+  // In dark mode the body stays slate (matches every other card) but uses
+  // a slightly lighter shade than the surrounding cards so the verdict
+  // still "lifts" visually; the coloured border carries the verdict
+  // semantic instead of tinting the whole body brown/green.
   const verdictClasses = buyWins
-    ? 'border-emerald-300 bg-emerald-50 dark:border-emerald-800 dark:bg-emerald-950'
-    : 'border-amber-400 bg-amber-50 dark:border-amber-800 dark:bg-amber-950'
+    ? 'border-emerald-300 bg-emerald-50 dark:border-emerald-600 dark:bg-slate-800'
+    : 'border-amber-400 bg-amber-50 dark:border-amber-600 dark:bg-slate-800'
   const verdictAccent = buyWins
-    ? 'text-emerald-800 dark:text-emerald-300'
-    : 'text-amber-800 dark:text-amber-300'
+    ? 'text-emerald-800 dark:text-emerald-400'
+    : 'text-amber-800 dark:text-amber-500'
   const VerdictIcon = buyWins ? TrendingUp : TrendingDown
 
   return (
@@ -115,7 +119,7 @@ function MonthlyCostsCard({
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <p className="text-xs uppercase tracking-wide font-semibold text-emerald-800 dark:text-emerald-400">
+          <p className="text-xs uppercase tracking-wide font-semibold text-emerald-800 dark:text-emerald-500">
             Buy
           </p>
           <p className="text-3xl font-bold tabular-nums text-stone-900 dark:text-slate-100 mt-1">
@@ -130,7 +134,7 @@ function MonthlyCostsCard({
           </dl>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide font-semibold text-amber-800 dark:text-amber-400">
+          <p className="text-xs uppercase tracking-wide font-semibold text-amber-800 dark:text-amber-500">
             Rent
           </p>
           <p className="text-3xl font-bold tabular-nums text-stone-900 dark:text-slate-100 mt-1">
@@ -185,9 +189,9 @@ function StatCard({
 }) {
   const valueColor =
     tone === 'emerald'
-      ? 'text-emerald-700 dark:text-emerald-400'
+      ? 'text-emerald-700 dark:text-emerald-500'
       : tone === 'amber'
-        ? 'text-amber-800 dark:text-amber-400'
+        ? 'text-amber-800 dark:text-amber-500'
         : 'text-stone-900 dark:text-slate-100'
   return (
     <div className="rounded-lg border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4">

@@ -53,8 +53,8 @@ export function MonteCarloPanel({ inputs, isDark = false }: Props) {
             : 'Renting looks robust'
   const statAccentClass =
     pBuy >= 0.5
-      ? 'text-emerald-700 dark:text-emerald-400'
-      : 'text-amber-800 dark:text-amber-400'
+      ? 'text-emerald-700 dark:text-emerald-500'
+      : 'text-amber-800 dark:text-amber-500'
 
   const buyColour = isDark ? BUY_DARK : BUY_LIGHT
   const rentColour = isDark ? RENT_DARK : RENT_LIGHT
