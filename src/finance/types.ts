@@ -15,10 +15,6 @@ export type Inputs = {
   buildingsInsuranceAnnual: number // £/yr
   serviceChargeAnnual: number // £/yr (leasehold service charge + ground rent; 0 if freehold)
 
-  // Periodic mortgage product fees (e.g. switching deals every few years)
-  remortgageFee: number // £ per renewal
-  remortgageFeeEveryYears: number // 0 disables
-
   // Selling
   sellingCostPercent: number // 0..1 (agent + legal as % of sale price)
 

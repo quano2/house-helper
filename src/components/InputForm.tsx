@@ -100,24 +100,6 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
           step={100}
         />
         <Field
-          label="Re-mortgage fee"
-          unit="£ per renewal"
-          hint="Product fee when switching deals"
-          value={inputs.remortgageFee}
-          onChange={(v) => update('remortgageFee', v)}
-          min={0}
-          step={50}
-        />
-        <Field
-          label="Re-mortgage every"
-          unit="years"
-          hint="UK fixed deals are typically 2–5 years"
-          value={inputs.remortgageFeeEveryYears}
-          onChange={(v) => update('remortgageFeeEveryYears', v)}
-          min={0}
-          max={30}
-        />
-        <Field
           label="Selling cost"
           unit="% of sale price"
           hint="Estate agent + solicitor on sale"

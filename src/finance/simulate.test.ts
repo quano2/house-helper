@@ -13,8 +13,6 @@ const baseInputs: Inputs = {
   maintenancePercent: 0.01,
   buildingsInsuranceAnnual: 300,
   serviceChargeAnnual: 0,
-  remortgageFee: 0,
-  remortgageFeeEveryYears: 0,
   sellingCostPercent: 0.02,
   monthlyRent: 1500,
   movingCostPerMove: 0,
@@ -100,13 +98,4 @@ describe('simulate', () => {
     expect(withMoves.years[24].rentNetWorth).toBeLessThan(noMoves.years[24].rentNetWorth)
   })
 
-  it('re-mortgage fees reduce buyer net worth', () => {
-    const noFees = simulate(baseInputs)
-    const withFees = simulate({
-      ...baseInputs,
-      remortgageFee: 1500,
-      remortgageFeeEveryYears: 5,
-    })
-    expect(withFees.years[24].buyNetWorth).toBeLessThan(noFees.years[24].buyNetWorth)
-  })
 })

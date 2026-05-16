@@ -35,8 +35,6 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
     monthlyRent,
     movingCostPerMove,
     renterMovesEveryYears,
-    remortgageFee,
-    remortgageFeeEveryYears,
     yearsToSimulate,
   } = inputs
 
@@ -110,13 +108,6 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
 
       if (renterMovesEveryYears > 0 && year % renterMovesEveryYears === 0) {
         rentCash -= movingCostPerMove
-      }
-      if (
-        remortgageFeeEveryYears > 0 &&
-        year % remortgageFeeEveryYears === 0 &&
-        year < mortgageTermYears
-      ) {
-        buyCash -= remortgageFee
       }
 
       const saleProceeds = houseValue * (1 - sellingCostPercent)
