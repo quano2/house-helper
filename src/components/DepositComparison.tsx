@@ -113,7 +113,7 @@ export function DepositComparison({ open, inputs, onApply, onClose }: Props) {
         if (e.target === ref.current) onClose()
       }}
       aria-labelledby="deposit-comparison-title"
-      className="p-0 rounded-xl max-w-2xl w-[calc(100vw-2rem)] bg-transparent backdrop:bg-black/50 dark:backdrop:bg-black/70"
+      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 p-0 rounded-xl max-w-2xl w-[calc(100vw-2rem)] bg-transparent backdrop:bg-black/50 dark:backdrop:bg-black/70"
     >
       <div className="bg-white dark:bg-slate-900 text-stone-900 dark:text-slate-100 rounded-xl border border-stone-200 dark:border-slate-700 shadow-xl p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-start gap-3 mb-4">
