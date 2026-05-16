@@ -34,7 +34,7 @@ export function ResultsPanel({ inputs, result, horizonYears, theme }: Props) {
             <p className="mt-2 text-lg text-slate-700">
               {buyWins ? 'Buying wins by' : 'Renting wins by'}
             </p>
-            <p className={`mt-0.5 text-5xl font-bold tracking-tight tabular-nums ${verdictAccent}`}>
+            <p className={`mt-0.5 text-4xl sm:text-5xl font-bold tracking-tight tabular-nums ${verdictAccent}`}>
               {finalYear ? formatGBP(Math.abs(finalYear.buyMinusRent)) : '—'}
             </p>
             <p className="mt-3 text-sm text-slate-700">
@@ -112,7 +112,7 @@ function MonthlyCostsCard({
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <p className="text-xs uppercase tracking-wide font-semibold text-emerald-700">
+          <p className="text-xs uppercase tracking-wide font-semibold text-emerald-800">
             Buy
           </p>
           <p className="text-3xl font-bold tabular-nums text-slate-900 mt-1">
@@ -127,7 +127,7 @@ function MonthlyCostsCard({
           </dl>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide font-semibold text-amber-700">
+          <p className="text-xs uppercase tracking-wide font-semibold text-amber-800">
             Rent
           </p>
           <p className="text-3xl font-bold tabular-nums text-slate-900 mt-1">

@@ -110,12 +110,10 @@ export function Section({
   title,
   icon: Icon,
   children,
-  columnsClass = 'grid-cols-1 sm:grid-cols-2',
 }: {
   title: string
   icon?: LucideIcon
   children: ReactNode
-  columnsClass?: string
 }) {
   return (
     <section className="space-y-4">
@@ -123,7 +121,7 @@ export function Section({
         {Icon && <Icon className="h-4 w-4 text-orange-600" aria-hidden="true" />}
         {title}
       </h3>
-      <div className={`grid gap-4 ${columnsClass}`}>{children}</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
     </section>
   )
 }

@@ -5,10 +5,9 @@ import { Field, ToggleField, Section } from './Field'
 type Props = {
   inputs: Inputs
   onChange: (inputs: Inputs) => void
-  fieldColumnsClass?: string
 }
 
-export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
+export function InputForm({ inputs, onChange }: Props) {
   const update = <K extends keyof Inputs>(key: K, value: Inputs[K]) =>
     onChange({ ...inputs, [key]: value })
 
@@ -21,7 +20,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
 
   return (
     <div className="space-y-8">
-      <Section title="The purchase" icon={Home} columnsClass={fieldColumnsClass}>
+      <Section title="The purchase" icon={Home}>
         <Field
           label="House price"
           unit="£"
@@ -63,7 +62,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         />
       </Section>
 
-      <Section title="Buying — other costs" icon={Wallet} columnsClass={fieldColumnsClass}>
+      <Section title="Buying — other costs" icon={Wallet}>
         <Field
           label="Legal + survey fees"
           unit="£ one-off"
@@ -117,7 +116,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         />
       </Section>
 
-      <Section title="Renting" icon={Key} columnsClass={fieldColumnsClass}>
+      <Section title="Renting" icon={Key}>
         <Field
           label="Monthly rent"
           unit="£"
@@ -154,7 +153,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         />
       </Section>
 
-      <Section title="Market assumptions" icon={TrendingUp} columnsClass={fieldColumnsClass}>
+      <Section title="Market assumptions" icon={TrendingUp}>
         <Field
           label="House price growth"
           unit="% per year"
