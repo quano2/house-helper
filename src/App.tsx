@@ -82,6 +82,7 @@ function App() {
               inputs={inputs}
               result={result}
               horizonYears={inputs.yearsToSimulate}
+              onUpdate={(changes) => setInputs({ ...inputs, ...changes })}
               isDark={isDark}
             />
           </section>

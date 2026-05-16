@@ -2,16 +2,18 @@ import { TrendingDown, TrendingUp } from 'lucide-react'
 import type { Inputs, SimulationResult } from '../finance/types'
 import { formatGBP } from '../utils/format'
 import { BreakEvenChart } from './BreakEvenChart'
+import { DepositComparison } from './DepositComparison'
 import { MonteCarloPanel } from './MonteCarloPanel'
 
 type Props = {
   inputs: Inputs
   result: SimulationResult
   horizonYears: number
+  onUpdate: (changes: Partial<Inputs>) => void
   isDark?: boolean
 }
 
-export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: Props) {
+export function ResultsPanel({ inputs, result, horizonYears, onUpdate, isDark = false }: Props) {
   const finalYear = result.years[result.years.length - 1]
   const buyWins = finalYear ? finalYear.buyMinusRent >= 0 : false
 
@@ -93,6 +95,11 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
       )}
 
       <MonteCarloPanel inputs={inputs} isDark={isDark} />
+
+      <DepositComparison
+        inputs={inputs}
+        onApply={(depositAmount, mortgageRate) => onUpdate({ depositAmount, mortgageRate })}
+      />
     </div>
   )
 }
