@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Home } from 'lucide-react'
 import { HeaderActions } from './components/HeaderActions'
-import { InputForm } from './components/InputForm'
-import { ResultsPanel } from './components/ResultsPanel'
-import { SavedScenarios } from './components/SavedScenarios'
+import { TabNav, type TabId } from './components/TabNav'
 import { simulate } from './finance/simulate'
 import { readInputsFromUrl, writeInputsToUrl } from './utils/url'
+import { CalculatorView } from './views/CalculatorView'
+import { VisualisationsView } from './views/VisualisationsView'
+import { AboutView } from './views/AboutView'
 
 const THEME_STORAGE_KEY = 'house-helper:theme'
 
@@ -20,12 +21,12 @@ function getInitialDark(): boolean {
 function App() {
   const [inputs, setInputs] = useState(() => readInputsFromUrl())
   const [isDark, setIsDark] = useState(getInitialDark)
+  const [activeTab, setActiveTab] = useState<TabId>('calculator')
 
   useEffect(() => {
     writeInputsToUrl(inputs)
   }, [inputs])
 
-  // Follow OS theme changes live — only when no manual override is stored
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     const handler = (e: MediaQueryListEvent) => {
@@ -70,22 +71,21 @@ function App() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 py-8">
-        <SavedScenarios current={inputs} onLoad={setInputs} />
+      <TabNav active={activeTab} onChange={setActiveTab} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] gap-8">
-          <section>
-            <InputForm inputs={inputs} onChange={setInputs} />
-          </section>
-          <section>
-            <ResultsPanel
-              inputs={inputs}
-              result={result}
-              horizonYears={inputs.yearsToSimulate}
-              isDark={isDark}
-            />
-          </section>
-        </div>
+      <main className="mx-auto max-w-6xl px-6 py-8">
+        {activeTab === 'calculator' && (
+          <CalculatorView
+            inputs={inputs}
+            setInputs={setInputs}
+            result={result}
+            isDark={isDark}
+          />
+        )}
+        {activeTab === 'visualisations' && (
+          <VisualisationsView inputs={inputs} isDark={isDark} />
+        )}
+        {activeTab === 'about' && <AboutView />}
 
         <footer className="mt-16 border-t border-stone-200 dark:border-slate-800 pt-6 text-xs text-stone-600 dark:text-slate-500">
           <p>
