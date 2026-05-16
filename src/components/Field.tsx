@@ -5,6 +5,8 @@ type Props = {
   label: string
   hint?: ReactNode
   unit?: ReactNode
+  /** Symbol shown inside the input on the left (e.g. £ or %) */
+  prefix?: ReactNode
   value: number
   onChange: (v: number) => void
   min?: number
@@ -39,6 +41,7 @@ export function Field({
   label,
   hint,
   unit,
+  prefix,
   value,
   onChange,
   min,
@@ -70,36 +73,43 @@ export function Field({
             unit
           ))}
       </div>
-      <input
-        type={inputType}
-        inputMode={thousands ? 'decimal' : undefined}
-        className="mt-1 w-full rounded-md border border-stone-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-stone-900 dark:text-slate-100 px-3 py-2 text-sm tabular-nums focus:border-orange-500 dark:focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-orange-500 dark:focus:ring-sky-400"
-        value={text}
-        min={!thousands ? min : undefined}
-        max={!thousands ? max : undefined}
-        step={!thousands ? displayStep : undefined}
-        onFocus={() => {
-          setFocused(true)
-          setText(formatForDisplay(displayValue, true, thousands))
-        }}
-        onBlur={() => {
-          setFocused(false)
-          const cleaned = text.replace(/,/g, '')
-          if (cleaned === '' || !Number.isFinite(Number(cleaned))) {
-            setText(formatForDisplay(displayValue, false, thousands))
-          }
-        }}
-        onChange={(e) => {
-          const next = e.target.value
-          setText(next)
-          const cleaned = next.replace(/,/g, '')
-          if (cleaned === '') return
-          const v = Number(cleaned)
-          if (Number.isFinite(v)) {
-            onChange(asPercent ? v / 100 : v)
-          }
-        }}
-      />
+      <div className="relative mt-1">
+        {prefix && (
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 dark:text-slate-400 text-sm pointer-events-none select-none">
+            {prefix}
+          </span>
+        )}
+        <input
+          type={inputType}
+          inputMode={thousands ? 'decimal' : undefined}
+          className={`w-full rounded-md border border-stone-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-stone-900 dark:text-slate-100 ${prefix ? 'pl-8' : 'pl-3'} pr-3 py-2 text-sm tabular-nums focus:border-orange-500 dark:focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-orange-500 dark:focus:ring-sky-400`}
+          value={text}
+          min={!thousands ? min : undefined}
+          max={!thousands ? max : undefined}
+          step={!thousands ? displayStep : undefined}
+          onFocus={() => {
+            setFocused(true)
+            setText(formatForDisplay(displayValue, true, thousands))
+          }}
+          onBlur={() => {
+            setFocused(false)
+            const cleaned = text.replace(/,/g, '')
+            if (cleaned === '' || !Number.isFinite(Number(cleaned))) {
+              setText(formatForDisplay(displayValue, false, thousands))
+            }
+          }}
+          onChange={(e) => {
+            const next = e.target.value
+            setText(next)
+            const cleaned = next.replace(/,/g, '')
+            if (cleaned === '') return
+            const v = Number(cleaned)
+            if (Number.isFinite(v)) {
+              onChange(asPercent ? v / 100 : v)
+            }
+          }}
+        />
+      </div>
       {hint && <p className="mt-1 text-xs text-stone-500 dark:text-slate-400">{hint}</p>}
     </label>
   )

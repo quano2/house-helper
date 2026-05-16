@@ -95,7 +95,7 @@ export function InputForm({ inputs, onChange }: Props) {
       <Section title="The purchase" icon={Home}>
         <Field
           label="House price"
-          unit="£"
+          prefix="£"
           value={inputs.housePrice}
           onChange={(v) => update('housePrice', v)}
           min={0}
@@ -106,6 +106,7 @@ export function InputForm({ inputs, onChange }: Props) {
           <Field
             key="deposit-amount"
             label="Deposit"
+            prefix="£"
             unit={depositUnitToggle}
             hint={depositPercentHint}
             value={inputs.depositAmount}
@@ -118,6 +119,7 @@ export function InputForm({ inputs, onChange }: Props) {
           <Field
             key="deposit-percent"
             label="Deposit"
+            prefix="%"
             unit={depositUnitToggle}
             hint={depositAmountHint}
             value={depositPercent}
@@ -130,7 +132,8 @@ export function InputForm({ inputs, onChange }: Props) {
         )}
         <Field
           label="Mortgage rate"
-          unit="% per year"
+          prefix="%"
+          unit="per year"
           value={inputs.mortgageRate}
           onChange={(v) => update('mortgageRate', v)}
           min={0}
@@ -155,7 +158,8 @@ export function InputForm({ inputs, onChange }: Props) {
       <Section title="Buying — other costs" icon={Wallet}>
         <Field
           label="Legal + survey fees"
-          unit="£ one-off"
+          prefix="£"
+          unit="one-off"
           value={inputs.legalAndSurveyFees}
           onChange={(v) => update('legalAndSurveyFees', v)}
           min={0}
@@ -164,7 +168,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Arrangement fee"
-          unit="£ one-off"
+          prefix="£"
+          unit="one-off"
           value={inputs.mortgageArrangementFee}
           onChange={(v) => update('mortgageArrangementFee', v)}
           min={0}
@@ -173,7 +178,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Maintenance"
-          unit="% of value/year"
+          prefix="%"
+          unit="of value/year"
           hint="Rule of thumb: 1%. Higher for older houses."
           value={inputs.maintenancePercent}
           onChange={(v) => update('maintenancePercent', v)}
@@ -182,7 +188,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Buildings insurance"
-          unit="£/year"
+          prefix="£"
+          unit="/year"
           value={inputs.buildingsInsuranceAnnual}
           onChange={(v) => update('buildingsInsuranceAnnual', v)}
           min={0}
@@ -191,7 +198,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Service & ground rent"
-          unit="£/year"
+          prefix="£"
+          unit="/year"
           hint="Leasehold only — 0 if freehold"
           value={inputs.serviceChargeAnnual}
           onChange={(v) => update('serviceChargeAnnual', v)}
@@ -201,7 +209,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Selling cost"
-          unit="% of sale price"
+          prefix="%"
+          unit="of sale price"
           hint="Estate agent + solicitor on sale"
           value={inputs.sellingCostPercent}
           onChange={(v) => update('sellingCostPercent', v)}
@@ -213,7 +222,7 @@ export function InputForm({ inputs, onChange }: Props) {
       <Section title="Renting" icon={Key}>
         <Field
           label="Monthly rent"
-          unit="£"
+          prefix="£"
           value={inputs.monthlyRent}
           onChange={(v) => update('monthlyRent', v)}
           min={0}
@@ -222,7 +231,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Rent inflation"
-          unit="% per year"
+          prefix="%"
+          unit="per year"
           value={inputs.rentInflationAnnual}
           onChange={(v) => update('rentInflationAnnual', v)}
           min={0}
@@ -230,7 +240,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Moving cost"
-          unit="£ per move"
+          prefix="£"
+          unit="per move"
           hint="Removals each time you change rental"
           value={inputs.movingCostPerMove}
           onChange={(v) => update('movingCostPerMove', v)}
@@ -252,7 +263,8 @@ export function InputForm({ inputs, onChange }: Props) {
       <Section title="Market assumptions" icon={TrendingUp}>
         <Field
           label="House price growth"
-          unit="% per year"
+          prefix="%"
+          unit="per year"
           hint="UK long-run: ~3–4% nominal"
           value={inputs.houseAppreciationAnnual}
           onChange={(v) => update('houseAppreciationAnnual', v)}
@@ -260,7 +272,8 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <Field
           label="Investment return"
-          unit="% per year"
+          prefix="%"
+          unit="per year"
           hint="Stocks long-run: ~7% nominal. Assumes ISA-sheltered."
           value={inputs.investmentReturnAnnual}
           onChange={(v) => update('investmentReturnAnnual', v)}
