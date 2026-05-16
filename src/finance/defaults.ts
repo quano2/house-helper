@@ -7,7 +7,9 @@ import type { Inputs } from './types'
 export const defaultInputs: Inputs = {
   housePrice: 350_000,
   depositAmount: 52_500, // 15% of the default house price
-  mortgageRate: 0.045,
+  // Calibrated against real broker quotes ~May 2026 (4.70% at 25% deposit,
+  // 4.80% at 15% deposit). Revisit if the BoE base rate moves much.
+  mortgageRate: 0.048,
   mortgageTermYears: 25,
   firstTimeBuyer: false,
 
