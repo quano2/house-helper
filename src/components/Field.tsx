@@ -57,26 +57,24 @@ export function Field({
     if (!focused) setText(formatForDisplay(displayValue, false, thousands))
   }, [displayValue, focused, thousands])
 
-  // Comma-formatted text needs type="text" — type="number" rejects "350,000"
   const inputType = thousands ? 'text' : 'number'
 
   return (
     <label className="block">
       <div className="flex items-baseline justify-between">
-        <span className="text-sm font-medium text-stone-700 dark:text-stone-300">{label}</span>
-        {unit && <span className="text-xs text-stone-500 dark:text-stone-500">{unit}</span>}
+        <span className="text-sm font-medium text-stone-700 dark:text-slate-300">{label}</span>
+        {unit && <span className="text-xs text-stone-500 dark:text-slate-500">{unit}</span>}
       </div>
       <input
         type={inputType}
         inputMode={thousands ? 'decimal' : undefined}
-        className="mt-1 w-full rounded-md border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 text-sm tabular-nums focus:border-orange-500 dark:focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-500 dark:focus:ring-orange-400"
+        className="mt-1 w-full rounded-md border border-stone-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-stone-900 dark:text-slate-100 px-3 py-2 text-sm tabular-nums focus:border-orange-500 dark:focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-orange-500 dark:focus:ring-sky-400"
         value={text}
         min={!thousands ? min : undefined}
         max={!thousands ? max : undefined}
         step={!thousands ? displayStep : undefined}
         onFocus={() => {
           setFocused(true)
-          // Switch to raw digits so editing isn't fighting comma positions
           setText(formatForDisplay(displayValue, true, thousands))
         }}
         onBlur={() => {
@@ -97,7 +95,7 @@ export function Field({
           }
         }}
       />
-      {hint && <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-stone-500 dark:text-slate-400">{hint}</p>}
     </label>
   )
 }
@@ -117,13 +115,13 @@ export function ToggleField({
     <label className="flex items-start gap-3 cursor-pointer">
       <input
         type="checkbox"
-        className="mt-1 h-4 w-4 rounded border-stone-300 dark:border-stone-600 accent-orange-600 focus:ring-orange-500"
+        className="mt-1 h-4 w-4 rounded border-stone-300 dark:border-slate-600 accent-orange-600 dark:accent-sky-500 focus:ring-orange-500 dark:focus:ring-sky-400"
         checked={value}
         onChange={(e) => onChange(e.target.checked)}
       />
       <span>
-        <span className="block text-sm font-medium text-stone-700 dark:text-stone-300">{label}</span>
-        {hint && <span className="block text-xs text-stone-500 dark:text-stone-400">{hint}</span>}
+        <span className="block text-sm font-medium text-stone-700 dark:text-slate-300">{label}</span>
+        {hint && <span className="block text-xs text-stone-500 dark:text-slate-400">{hint}</span>}
       </span>
     </label>
   )
@@ -140,8 +138,8 @@ export function Section({
 }) {
   return (
     <section className="space-y-4">
-      <h3 className="flex items-center gap-2 text-base font-semibold text-stone-900 dark:text-stone-100 border-b border-stone-200 dark:border-stone-700 pb-1">
-        {Icon && <Icon className="h-4 w-4 text-orange-600 dark:text-orange-400" aria-hidden="true" />}
+      <h3 className="flex items-center gap-2 text-base font-semibold text-stone-900 dark:text-slate-100 border-b border-stone-200 dark:border-slate-700 pb-1">
+        {Icon && <Icon className="h-4 w-4 text-orange-600 dark:text-sky-400" aria-hidden="true" />}
         {title}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>

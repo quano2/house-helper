@@ -7,7 +7,7 @@ type Props = {
 }
 
 const BUTTON_CLASS =
-  'rounded-full p-2 text-stone-700 dark:text-amber-200 hover:bg-amber-200/60 dark:hover:bg-stone-800 transition-colors'
+  'rounded-full p-2 text-stone-700 dark:text-slate-300 hover:bg-amber-200/60 dark:hover:bg-slate-800 transition-colors'
 
 export function HeaderActions({ isDark, onToggleDark }: Props) {
   const [copied, setCopied] = useState(false)

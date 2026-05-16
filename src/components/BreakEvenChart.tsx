@@ -18,10 +18,10 @@ type Props = {
   isDark?: boolean
 }
 
-const BUY_LIGHT = '#15803d' // emerald-700
-const BUY_DARK = '#34d399' // emerald-400
-const RENT_LIGHT = '#b45309' // amber-700
-const RENT_DARK = '#fbbf24' // amber-400
+const BUY_LIGHT = '#15803d'
+const BUY_DARK = '#34d399'
+const RENT_LIGHT = '#b45309'
+const RENT_DARK = '#fbbf24'
 
 export function BreakEvenChart({ years, breakEvenYear, isDark = false }: Props) {
   const data = years.map((y) => ({
@@ -32,11 +32,11 @@ export function BreakEvenChart({ years, breakEvenYear, isDark = false }: Props) 
 
   const buyColour = isDark ? BUY_DARK : BUY_LIGHT
   const rentColour = isDark ? RENT_DARK : RENT_LIGHT
-  const gridStroke = isDark ? '#44403c' : '#e7e5e4'
-  const axisStroke = isDark ? '#a8a29e' : '#78716c'
-  const tooltipBg = isDark ? '#1c1917' : '#ffffff'
-  const tooltipBorder = isDark ? '#44403c' : '#e7e5e4'
-  const tooltipText = isDark ? '#f5f5f4' : '#1c1917'
+  const gridStroke = isDark ? '#334155' : '#e7e5e4'
+  const axisStroke = isDark ? '#94a3b8' : '#78716c'
+  const tooltipBg = isDark ? '#0f172a' : '#ffffff'
+  const tooltipBorder = isDark ? '#334155' : '#e7e5e4'
+  const tooltipText = isDark ? '#f1f5f9' : '#1c1917'
 
   return (
     <div className="h-80 w-full">
