@@ -163,7 +163,7 @@ export function InputForm({ inputs, onChange }: Props) {
           thousands
         />
         <Field
-          label="Mortgage arrangement fee"
+          label="Arrangement fee"
           unit="£ one-off"
           value={inputs.mortgageArrangementFee}
           onChange={(v) => update('mortgageArrangementFee', v)}
@@ -190,7 +190,7 @@ export function InputForm({ inputs, onChange }: Props) {
           thousands
         />
         <Field
-          label="Service charge & ground rent"
+          label="Service & ground rent"
           unit="£/year"
           hint="Leasehold only — 0 if freehold"
           value={inputs.serviceChargeAnnual}
