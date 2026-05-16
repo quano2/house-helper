@@ -56,11 +56,14 @@ export function MonteCarloPanel({ inputs }: Props) {
         <Dices className="h-5 w-5 text-orange-600 shrink-0 mt-0.5" />
         <div>
           <h3 className="text-sm font-semibold text-slate-900">
-            Monte Carlo — how robust is the verdict?
+            How robust is the verdict?
           </h3>
-          <p className="text-xs text-slate-500 mt-0.5">
-            {result.runs} simulations sampling annual house prices, rents and investment returns
-            from realistic distributions.
+          <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+            The verdict above assumes one fixed set of market conditions. In reality,
+            house prices, rents and investment returns vary every year. This re-runs
+            the simulation <span className="font-semibold">{result.runs} times</span>,
+            varying each year's rates within realistic ranges, and counts how often
+            buying ends ahead.
           </p>
         </div>
       </div>
@@ -80,12 +83,20 @@ export function MonteCarloPanel({ inputs }: Props) {
           {pBuy >= 0.55 ? (
             <>The buy path beats rent in most plausible scenarios.</>
           ) : pBuy >= 0.45 ? (
-            <>Neither side has a meaningful edge — the answer depends heavily on the assumptions you can't pin down.</>
+            <>Neither side has a meaningful edge — the answer depends heavily on assumptions you can't pin down.</>
           ) : (
             <>The rent path beats buy in most plausible scenarios.</>
-          )}{' '}
-          The bands below show the 5th–95th percentile range of outcomes — wide bands mean high uncertainty.
+          )}
         </p>
+      </div>
+
+      <div className="rounded-md bg-amber-50/60 border border-amber-200 px-4 py-3 text-xs text-stone-700 mb-4 leading-relaxed">
+        <span className="font-semibold text-stone-900">How to read the chart:</span>{' '}
+        the solid lines are the <em>median</em> outcome for each path — what happens
+        in the middle of the pack. The shaded bands cover the middle 90% of outcomes
+        (5th to 95th percentile). <span className="font-semibold">Wide bands mean the
+        answer is highly sensitive to luck</span>; narrow bands mean the path is
+        relatively predictable.
       </div>
 
       <div className="h-80 w-full">
