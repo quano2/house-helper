@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Scale } from 'lucide-react'
+import { ExternalLink, Scale } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { simulate } from '../finance/simulate'
 import { formatGBP } from '../utils/format'
@@ -179,6 +179,48 @@ export function DepositComparison({ inputs, onApply }: Props) {
       <p className="mt-1 text-xs text-stone-500 dark:text-slate-400 leading-relaxed">
         LTV rate spreads are approximate (~0.1%/0.2%/0.5%/0.9% above the 60% LTV rate at 25/15/10/5% deposit). Actual lender offers vary.
       </p>
+
+      <div className="mt-4 pt-4 border-t border-stone-200 dark:border-slate-700">
+        <p className="text-xs text-stone-600 dark:text-slate-300 leading-relaxed">
+          <span className="font-semibold text-stone-800 dark:text-slate-100">
+            Not sure what mortgage rate to use?
+          </span>{' '}
+          Check current best-buy tables — type your rate into the form above and the
+          comparison re-calibrates around it.
+        </p>
+        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">
+          <li>
+            <a
+              href="https://www.moneysavingexpert.com/mortgages/best-buys/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
+            >
+              MoneySavingExpert <ExternalLink className="h-3 w-3" />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.moneyfacts.co.uk/mortgages/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
+            >
+              Moneyfacts <ExternalLink className="h-3 w-3" />
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
+            >
+              BoE base rate <ExternalLink className="h-3 w-3" />
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   )
 }
