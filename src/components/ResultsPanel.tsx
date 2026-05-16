@@ -5,6 +5,7 @@ import { formatGBP } from '../utils/format'
 import { AssumptionsModal } from './AssumptionsModal'
 import { BreakEvenChart } from './BreakEvenChart'
 import { MonteCarloPanel } from './MonteCarloPanel'
+import { WaitAnalysis } from './WaitAnalysis'
 
 type Props = {
   inputs: Inputs
@@ -107,6 +108,8 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
       )}
 
       <MonteCarloPanel inputs={inputs} isDark={isDark} />
+
+      <WaitAnalysis inputs={inputs} />
     </div>
   )
 }
