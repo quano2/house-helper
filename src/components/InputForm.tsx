@@ -281,8 +281,9 @@ export function InputForm({ inputs, onChange }: Props) {
           asPercent
         />
         <Field
-          label="Years to simulate"
+          label="Time horizon"
           unit="years"
+          hint="When would you sell / end the comparison? Try shorter horizons (5–10y) to test moving early."
           value={inputs.yearsToSimulate}
           onChange={(v) => update('yearsToSimulate', v)}
           min={1}
