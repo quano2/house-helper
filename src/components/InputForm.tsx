@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { Home, Key, TrendingUp, Wallet } from 'lucide-react'
 import type { Inputs } from '../finance/types'
+import { formatGBP } from '../utils/format'
 import { Field, ToggleField, Section } from './Field'
 
 type Props = {
@@ -7,16 +9,50 @@ type Props = {
   onChange: (inputs: Inputs) => void
 }
 
+type DepositMode = 'amount' | 'percent'
+
 export function InputForm({ inputs, onChange }: Props) {
   const update = <K extends keyof Inputs>(key: K, value: Inputs[K]) =>
     onChange({ ...inputs, [key]: value })
 
+  const [depositMode, setDepositMode] = useState<DepositMode>('amount')
+
   const depositPercent =
     inputs.housePrice > 0 ? inputs.depositAmount / inputs.housePrice : 0
-  const depositHint =
+  const depositPercentHint =
     inputs.housePrice > 0
       ? `${(depositPercent * 100).toFixed(1)}% of house price`
       : 'Set a house price first'
+  const depositAmountHint = `= ${formatGBP(inputs.depositAmount)}`
+
+  const depositUnitToggle = (
+    <div className="inline-flex items-center bg-stone-100 dark:bg-slate-800 rounded p-0.5 text-xs">
+      <button
+        type="button"
+        onClick={() => setDepositMode('amount')}
+        aria-pressed={depositMode === 'amount'}
+        className={
+          depositMode === 'amount'
+            ? 'bg-white dark:bg-slate-600 text-stone-900 dark:text-slate-100 rounded px-2 py-0.5 font-medium shadow-sm'
+            : 'text-stone-500 dark:text-slate-400 px-2 py-0.5'
+        }
+      >
+        £
+      </button>
+      <button
+        type="button"
+        onClick={() => setDepositMode('percent')}
+        aria-pressed={depositMode === 'percent'}
+        className={
+          depositMode === 'percent'
+            ? 'bg-white dark:bg-slate-600 text-stone-900 dark:text-slate-100 rounded px-2 py-0.5 font-medium shadow-sm'
+            : 'text-stone-500 dark:text-slate-400 px-2 py-0.5'
+        }
+      >
+        %
+      </button>
+    </div>
+  )
 
   return (
     <div className="space-y-8">
@@ -30,16 +66,32 @@ export function InputForm({ inputs, onChange }: Props) {
           step={5000}
           thousands
         />
-        <Field
-          label="Deposit"
-          unit="£"
-          hint={depositHint}
-          value={inputs.depositAmount}
-          onChange={(v) => update('depositAmount', v)}
-          min={0}
-          step={1000}
-          thousands
-        />
+        {depositMode === 'amount' ? (
+          <Field
+            key="deposit-amount"
+            label="Deposit"
+            unit={depositUnitToggle}
+            hint={depositPercentHint}
+            value={inputs.depositAmount}
+            onChange={(v) => update('depositAmount', v)}
+            min={0}
+            step={1000}
+            thousands
+          />
+        ) : (
+          <Field
+            key="deposit-percent"
+            label="Deposit"
+            unit={depositUnitToggle}
+            hint={depositAmountHint}
+            value={depositPercent}
+            onChange={(pct) =>
+              update('depositAmount', Math.round(pct * inputs.housePrice))
+            }
+            min={0}
+            asPercent
+          />
+        )}
         <Field
           label="Mortgage rate"
           unit="% per year"

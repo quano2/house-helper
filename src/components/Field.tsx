@@ -4,7 +4,7 @@ import type { LucideIcon } from 'lucide-react'
 type Props = {
   label: string
   hint?: string
-  unit?: string
+  unit?: ReactNode
   value: number
   onChange: (v: number) => void
   min?: number
@@ -61,9 +61,14 @@ export function Field({
 
   return (
     <label className="block">
-      <div className="flex items-baseline justify-between">
+      <div className="flex items-baseline justify-between gap-2">
         <span className="text-sm font-medium text-stone-700 dark:text-slate-300">{label}</span>
-        {unit && <span className="text-xs text-stone-500 dark:text-slate-500">{unit}</span>}
+        {unit &&
+          (typeof unit === 'string' ? (
+            <span className="text-xs text-stone-500 dark:text-slate-500">{unit}</span>
+          ) : (
+            unit
+          ))}
       </div>
       <input
         type={inputType}
