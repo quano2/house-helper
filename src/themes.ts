@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { Flame } from 'lucide-react'
+import { Home } from 'lucide-react'
 
 export type ThemeId = 'warm' | 'warm-dark'
 
@@ -32,7 +32,7 @@ export const themes: Record<ThemeId, ThemeTokens> = {
   warm: {
     id: 'warm',
     label: 'Warm',
-    logoIcon: Flame,
+    logoIcon: Home,
     pageBg: 'bg-amber-50/40',
     headerWrapper: 'bg-gradient-to-br from-amber-100 to-orange-100 border-b border-amber-200',
     headerInner: 'mx-auto max-w-6xl px-6 py-8',
@@ -50,7 +50,7 @@ export const themes: Record<ThemeId, ThemeTokens> = {
   'warm-dark': {
     id: 'warm-dark',
     label: 'Warm Dark',
-    logoIcon: Flame,
+    logoIcon: Home,
     pageBg: 'bg-stone-950',
     headerWrapper: 'bg-gradient-to-br from-amber-950 via-stone-900 to-stone-950 border-b border-stone-800',
     headerInner: 'mx-auto max-w-6xl px-6 py-8',

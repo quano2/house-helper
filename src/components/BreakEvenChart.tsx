@@ -1,8 +1,8 @@
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Legend,
-  Line,
-  LineChart,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
@@ -17,6 +17,9 @@ type Props = {
   breakEvenYear: number | null
 }
 
+const BUY_COLOUR = '#15803d' // emerald-700
+const RENT_COLOUR = '#b45309' // amber-700 — matches warm theme
+
 export function BreakEvenChart({ years, breakEvenYear }: Props) {
   const data = years.map((y) => ({
     year: y.year,
@@ -27,15 +30,25 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
   return (
     <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 20, right: 16, left: 8, bottom: 24 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+        <ComposedChart data={data} margin={{ top: 20, right: 16, left: 8, bottom: 24 }}>
+          <defs>
+            <linearGradient id="buyGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={BUY_COLOUR} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={BUY_COLOUR} stopOpacity={0} />
+            </linearGradient>
+            <linearGradient id="rentGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={RENT_COLOUR} stopOpacity={0.25} />
+              <stop offset="100%" stopColor={RENT_COLOUR} stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
           <XAxis
             dataKey="year"
-            stroke="#64748b"
-            label={{ value: 'Year', position: 'insideBottom', offset: -10, fill: '#64748b' }}
+            stroke="#78716c"
+            label={{ value: 'Year', position: 'insideBottom', offset: -10, fill: '#78716c' }}
           />
           <YAxis
-            stroke="#64748b"
+            stroke="#78716c"
             tickFormatter={(v: number) => formatGBPCompact(v)}
             width={80}
           />
@@ -44,7 +57,7 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
             labelFormatter={(label) => `Year ${label}`}
             contentStyle={{
               borderRadius: 8,
-              border: '1px solid #e2e8f0',
+              border: '1px solid #e7e5e4',
               fontSize: 13,
             }}
           />
@@ -52,34 +65,34 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
           {breakEvenYear !== null && (
             <ReferenceLine
               x={breakEvenYear}
-              stroke="#94a3b8"
+              stroke="#78716c"
               strokeDasharray="4 4"
               label={{
                 value: `Break-even (year ${breakEvenYear})`,
                 position: 'insideTop',
-                fill: '#475569',
+                fill: '#44403c',
                 fontSize: 12,
                 offset: 8,
               }}
             />
           )}
-          <Line
+          <Area
             type="monotone"
             dataKey="buy"
             name="Buy"
-            stroke="#16a34a"
-            strokeWidth={2}
-            dot={false}
+            stroke={BUY_COLOUR}
+            strokeWidth={2.5}
+            fill="url(#buyGradient)"
           />
-          <Line
+          <Area
             type="monotone"
             dataKey="rent"
             name="Rent"
-            stroke="#dc2626"
-            strokeWidth={2}
-            dot={false}
+            stroke={RENT_COLOUR}
+            strokeWidth={2.5}
+            fill="url(#rentGradient)"
           />
-        </LineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   )

@@ -1,3 +1,4 @@
+import { Home, Key, TrendingUp, Wallet } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { Field, ToggleField, Section } from './Field'
 
@@ -13,7 +14,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
 
   return (
     <div className="space-y-8">
-      <Section title="The purchase" columnsClass={fieldColumnsClass}>
+      <Section title="The purchase" icon={Home} columnsClass={fieldColumnsClass}>
         <Field
           label="House price"
           unit="£"
@@ -55,7 +56,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         />
       </Section>
 
-      <Section title="Buying — other costs" columnsClass={fieldColumnsClass}>
+      <Section title="Buying — other costs" icon={Wallet} columnsClass={fieldColumnsClass}>
         <Field
           label="Legal + survey fees"
           unit="£ one-off"
@@ -109,7 +110,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         />
       </Section>
 
-      <Section title="Renting" columnsClass={fieldColumnsClass}>
+      <Section title="Renting" icon={Key} columnsClass={fieldColumnsClass}>
         <Field
           label="Monthly rent"
           unit="£"
@@ -128,7 +129,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         />
       </Section>
 
-      <Section title="Market assumptions" columnsClass={fieldColumnsClass}>
+      <Section title="Market assumptions" icon={TrendingUp} columnsClass={fieldColumnsClass}>
         <Field
           label="House price growth"
           unit="% per year"

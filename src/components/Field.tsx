@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react'
+import type { LucideIcon } from 'lucide-react'
 
 type Props = {
   label: string
@@ -107,16 +108,19 @@ export function ToggleField({
 
 export function Section({
   title,
+  icon: Icon,
   children,
   columnsClass = 'grid-cols-1 sm:grid-cols-2',
 }: {
   title: string
+  icon?: LucideIcon
   children: ReactNode
   columnsClass?: string
 }) {
   return (
     <section className="space-y-4">
-      <h3 className="text-base font-semibold text-slate-900 border-b border-slate-200 pb-1">
+      <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900 border-b border-slate-200 pb-1">
+        {Icon && <Icon className="h-4 w-4 text-orange-600" aria-hidden="true" />}
         {title}
       </h3>
       <div className={`grid gap-4 ${columnsClass}`}>{children}</div>
