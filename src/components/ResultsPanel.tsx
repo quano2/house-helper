@@ -1,20 +1,20 @@
 import type { SimulationResult } from '../finance/types'
+import type { ThemeTokens } from '../themes'
 import { formatGBP } from '../utils/format'
 import { BreakEvenChart } from './BreakEvenChart'
 
 type Props = {
   result: SimulationResult
   horizonYears: number
+  theme: ThemeTokens
 }
 
-export function ResultsPanel({ result, horizonYears }: Props) {
+export function ResultsPanel({ result, horizonYears, theme }: Props) {
   const finalYear = result.years[result.years.length - 1]
   const buyWins = finalYear ? finalYear.buyMinusRent >= 0 : false
 
-  const verdictClasses = buyWins
-    ? 'border-emerald-300 bg-gradient-to-br from-emerald-50 to-emerald-100'
-    : 'border-rose-300 bg-gradient-to-br from-rose-50 to-rose-100'
-  const verdictAccent = buyWins ? 'text-emerald-700' : 'text-rose-700'
+  const verdictClasses = buyWins ? theme.verdictBuy : theme.verdictRent
+  const verdictAccent = buyWins ? theme.verdictAccentBuy : theme.verdictAccentRent
 
   return (
     <div className="space-y-6">
@@ -45,7 +45,7 @@ export function ResultsPanel({ result, horizonYears }: Props) {
         <StatCard
           label="Total upfront buy cost"
           value={formatGBP(result.totalUpfrontBuyCost)}
-          hint="Deposit + SDLT + legal + mortgage fee"
+          hint="Deposit + stamp duty + legal + mortgage fee"
         />
         <StatCard
           label="Monthly mortgage payment"
