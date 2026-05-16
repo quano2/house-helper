@@ -27,7 +27,7 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
   return (
     <div className="h-80 w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 10, right: 16, left: 8, bottom: 24 }}>
+        <LineChart data={data} margin={{ top: 20, right: 16, left: 8, bottom: 24 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
             dataKey="year"
@@ -55,10 +55,11 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
               stroke="#94a3b8"
               strokeDasharray="4 4"
               label={{
-                value: `Break-even`,
-                position: 'top',
+                value: `Break-even (year ${breakEvenYear})`,
+                position: 'insideTop',
                 fill: '#475569',
                 fontSize: 12,
+                offset: 8,
               }}
             />
           )}
