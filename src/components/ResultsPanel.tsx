@@ -1,16 +1,19 @@
 import { TrendingDown, TrendingUp } from 'lucide-react'
-import type { SimulationResult } from '../finance/types'
+import type { Inputs, SimulationResult } from '../finance/types'
 import type { ThemeTokens } from '../themes'
 import { formatGBP } from '../utils/format'
 import { BreakEvenChart } from './BreakEvenChart'
+import { HistoricalPanel } from './HistoricalPanel'
+import { MonteCarloPanel } from './MonteCarloPanel'
 
 type Props = {
+  inputs: Inputs
   result: SimulationResult
   horizonYears: number
   theme: ThemeTokens
 }
 
-export function ResultsPanel({ result, horizonYears, theme }: Props) {
+export function ResultsPanel({ inputs, result, horizonYears, theme }: Props) {
   const finalYear = result.years[result.years.length - 1]
   const buyWins = finalYear ? finalYear.buyMinusRent >= 0 : false
 
@@ -88,6 +91,9 @@ export function ResultsPanel({ result, horizonYears, theme }: Props) {
           />
         </div>
       )}
+
+      <MonteCarloPanel inputs={inputs} />
+      <HistoricalPanel inputs={inputs} />
     </div>
   )
 }

@@ -3,17 +3,23 @@ import { calculateSdlt } from './sdlt'
 import { monthlyMortgagePayment, balanceAfterMonths } from './mortgage'
 
 /**
+ * Per-year rate arrays. Length must equal `yearsToSimulate`. Each entry
+ * is the annual rate for that simulation year (0-indexed: index 0 = year 1).
+ */
+export type RatePaths = {
+  houseAppreciation: number[]
+  rentInflation: number[]
+  investmentReturn: number[]
+}
+
+/**
  * Simulate buy-vs-rent month by month, tracking net worth of each strategy.
  *
- * The model: both paths start with the same capital K (deposit + all upfront
- * buying costs). The buy path spends K at t=0. The rent path keeps K invested.
- * Each month, whichever path has the lower out-of-pocket cost invests the
- * difference at the market return. At horizon T, compare net worth:
- *   - Buy: (house value × (1 - selling cost%)) − mortgage balance + cash buffer
- *   - Rent: invested portfolio value
- * The cross-over year is the break-even.
+ * See the previous version's doc-comment for the methodology. This version
+ * accepts per-year rate arrays so it can be reused for Monte Carlo and
+ * historical backtests as well as the standard deterministic case.
  */
-export function simulate(inputs: Inputs): SimulationResult {
+export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationResult {
   const {
     housePrice,
     depositPercent,
@@ -31,9 +37,6 @@ export function simulate(inputs: Inputs): SimulationResult {
     renterMovesEveryYears,
     remortgageFee,
     remortgageFeeEveryYears,
-    houseAppreciationAnnual,
-    rentInflationAnnual,
-    investmentReturnAnnual,
     yearsToSimulate,
   } = inputs
 
@@ -49,16 +52,11 @@ export function simulate(inputs: Inputs): SimulationResult {
     mortgageTermYears,
   )
 
-  const monthlyAppreciation = Math.pow(1 + houseAppreciationAnnual, 1 / 12) - 1
-  const monthlyInvestmentReturn =
-    Math.pow(1 + investmentReturnAnnual, 1 / 12) - 1
-
   let houseValue = housePrice
   let rent = monthlyRent
   const insurance = buildingsInsuranceAnnual
   const serviceCharge = serviceChargeAnnual
 
-  // Cash positions
   let buyCash = 0
   let rentCash = totalUpfrontBuyCost
 
@@ -68,15 +66,24 @@ export function simulate(inputs: Inputs): SimulationResult {
   let buyAnnualOutflowAccum = 0
   let rentAnnualOutflowAccum = 0
 
+  // Updated at the start of each year from the rate arrays
+  let monthlyAppreciation = 0
+  let monthlyInvestmentReturn = 0
+
   for (let month = 1; month <= totalMonths; month++) {
-    const monthsElapsed = month
+    if (month === 1 || month % 12 === 1) {
+      const yearIdx = Math.floor((month - 1) / 12)
+      monthlyAppreciation = Math.pow(1 + rates.houseAppreciation[yearIdx], 1 / 12) - 1
+      monthlyInvestmentReturn = Math.pow(1 + rates.investmentReturn[yearIdx], 1 / 12) - 1
+    }
+
     const mortgageBalance = balanceAfterMonths(
       loanAmount,
       mortgageRate,
       mortgageTermYears,
-      Math.min(monthsElapsed, mortgageTermYears * 12),
+      Math.min(month, mortgageTermYears * 12),
     )
-    const activeMortgage = monthsElapsed <= mortgageTermYears * 12
+    const activeMortgage = month <= mortgageTermYears * 12
 
     const maintenanceMonthly = (houseValue * maintenancePercent) / 12
     const buyMonthly =
@@ -90,31 +97,20 @@ export function simulate(inputs: Inputs): SimulationResult {
     rentAnnualOutflowAccum += rentMonthly
 
     const diff = buyMonthly - rentMonthly
-    if (diff > 0) {
-      // Rent path is cheaper this month → rent path invests the difference
-      rentCash += diff
-    } else if (diff < 0) {
-      // Buy path is cheaper → buy path invests the difference
-      buyCash += -diff
-    }
+    if (diff > 0) rentCash += diff
+    else if (diff < 0) buyCash += -diff
 
-    // Compound investments for one month
     rentCash *= 1 + monthlyInvestmentReturn
     buyCash *= 1 + monthlyInvestmentReturn
 
-    // House appreciates monthly
     houseValue *= 1 + monthlyAppreciation
 
-    // Year boundary: discrete events, then snapshot + annual step-ups
     if (month % 12 === 0) {
       const year = month / 12
 
-      // Renter pays a moving cost every N years (drawn from invested savings)
       if (renterMovesEveryYears > 0 && year % renterMovesEveryYears === 0) {
         rentCash -= movingCostPerMove
       }
-
-      // Buyer pays a re-mortgage product fee every M years while still on a mortgage
       if (
         remortgageFeeEveryYears > 0 &&
         year % remortgageFeeEveryYears === 0 &&
@@ -144,32 +140,41 @@ export function simulate(inputs: Inputs): SimulationResult {
 
       buyAnnualOutflowAccum = 0
       rentAnnualOutflowAccum = 0
-      // Annual step-up — rent only. Insurance and service charges held flat
-      // for simplicity (their growth is third-order noise vs the big levers).
-      rent *= 1 + rentInflationAnnual
+      // Apply rent inflation for next year using current year's index
+      const rateForNextYear = rates.rentInflation[year - 1]
+      rent *= 1 + rateForNextYear
     }
   }
-
-  const breakEvenYear = findBreakEven(years)
 
   return {
     sdlt,
     totalUpfrontBuyCost,
     monthlyMortgagePayment: mortgagePayment,
     years,
-    breakEvenYear,
+    breakEvenYear: findBreakEven(years),
   }
 }
 
+/**
+ * Public API — deterministic simulation using the constant rates from inputs.
+ * Convenience wrapper around simulateWithRates.
+ */
+export function simulate(inputs: Inputs): SimulationResult {
+  const n = inputs.yearsToSimulate
+  return simulateWithRates(inputs, {
+    houseAppreciation: Array(n).fill(inputs.houseAppreciationAnnual),
+    rentInflation: Array(n).fill(inputs.rentInflationAnnual),
+    investmentReturn: Array(n).fill(inputs.investmentReturnAnnual),
+  })
+}
+
 function findBreakEven(years: YearResult[]): number | null {
-  // First year where buy net worth >= rent net worth, assuming we start behind.
   const start = years[0]
   if (!start) return null
   const startSign = Math.sign(start.buyMinusRent)
   for (const y of years) {
     if (startSign <= 0 && y.buyMinusRent >= 0) return y.year
   }
-  // If buy was already ahead from year 1, return 1 (or null if never crosses)
   if (startSign > 0) return 1
   return null
 }

@@ -48,6 +48,7 @@ function App() {
           </section>
           <section>
             <ResultsPanel
+              inputs={inputs}
               result={result}
               horizonYears={inputs.yearsToSimulate}
               theme={theme}
