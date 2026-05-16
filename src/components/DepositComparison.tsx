@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { ExternalLink, Scale } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { ChevronDown, ExternalLink, Scale } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { simulate } from '../finance/simulate'
 import { formatGBP } from '../utils/format'
@@ -51,6 +51,8 @@ function spreadForLtv(ltv: number): number {
 }
 
 export function DepositComparison({ inputs, onApply }: Props) {
+  const [open, setOpen] = useState(false)
+
   const userLtv =
     inputs.housePrice > 0
       ? Math.max(0, Math.min(1, 1 - inputs.depositAmount / inputs.housePrice))
@@ -96,21 +98,44 @@ export function DepositComparison({ inputs, onApply }: Props) {
 
   return (
     <div className="rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-      <div className="flex items-start gap-3 mb-4">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="w-full flex items-start gap-3 text-left"
+      >
         <Scale className="h-5 w-5 text-orange-600 dark:text-sky-400 shrink-0 mt-0.5" />
-        <div>
+        <div className="flex-1">
           <h3 className="text-sm font-semibold text-stone-900 dark:text-slate-100">
             Deposit / mortgage rate comparison
           </h3>
-          <p className="text-sm text-stone-600 dark:text-slate-400 mt-1 leading-relaxed">
+          <p className="text-xs text-stone-500 dark:text-slate-400 mt-1">
+            {open
+              ? 'How the verdict shifts across deposit sizes with LTV-adjusted rates.'
+              : 'See how the verdict changes across deposit sizes (5%–40%) with realistic LTV-adjusted rates.'}
+          </p>
+        </div>
+        <ChevronDown
+          className={`h-5 w-5 mt-0.5 shrink-0 text-stone-400 dark:text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`}
+          aria-hidden="true"
+        />
+      </button>
+
+      {!open && (
+        <p className="mt-3 text-xs text-stone-500 dark:text-slate-400">
+          Click to expand →
+        </p>
+      )}
+
+      {open && (
+        <div className="mt-4">
+          <p className="text-sm text-stone-600 dark:text-slate-400 mb-4 leading-relaxed">
             UK mortgage rates rise with loan-to-value. This table derives a
             typical rate for each deposit level from <em>your</em> current rate,
             then re-runs the simulation. Click <span className="font-semibold text-stone-900 dark:text-slate-200">Use</span> to apply a scenario.
           </p>
-        </div>
-      </div>
 
-      <div className="overflow-x-auto -mx-2">
+          <div className="overflow-x-auto -mx-2">
         <table className="w-full text-sm border-collapse">
           <thead>
             <tr className="text-xs uppercase tracking-wide text-stone-500 dark:text-slate-400">
@@ -185,47 +210,49 @@ export function DepositComparison({ inputs, onApply }: Props) {
         LTV spreads calibrated to UK best-buy data (May 2026): ~+0.09% / +0.27% / +0.45% / +0.72% above the 60% LTV rate at 25 / 15 / 10 / 5% deposit. Individual lender offers vary.
       </p>
 
-      <div className="mt-4 pt-4 border-t border-stone-200 dark:border-slate-700">
-        <p className="text-xs text-stone-600 dark:text-slate-300 leading-relaxed">
-          <span className="font-semibold text-stone-800 dark:text-slate-100">
-            Not sure what mortgage rate to use?
-          </span>{' '}
-          Check current best-buy tables — type your rate into the form above and the
-          comparison re-calibrates around it.
-        </p>
-        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">
-          <li>
-            <a
-              href="https://www.moneysavingexpert.com/mortgages/best-buys/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
-            >
-              MoneySavingExpert <ExternalLink className="h-3 w-3" />
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.moneyfacts.co.uk/mortgages/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
-            >
-              Moneyfacts <ExternalLink className="h-3 w-3" />
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
-            >
-              BoE base rate <ExternalLink className="h-3 w-3" />
-            </a>
-          </li>
-        </ul>
-      </div>
+          <div className="mt-4 pt-4 border-t border-stone-200 dark:border-slate-700">
+            <p className="text-xs text-stone-600 dark:text-slate-300 leading-relaxed">
+              <span className="font-semibold text-stone-800 dark:text-slate-100">
+                Not sure what mortgage rate to use?
+              </span>{' '}
+              Check current best-buy tables — type your rate into the form above and the
+              comparison re-calibrates around it.
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">
+              <li>
+                <a
+                  href="https://www.moneysavingexpert.com/mortgages/best-buys/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
+                >
+                  MoneySavingExpert <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.moneyfacts.co.uk/mortgages/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
+                >
+                  Moneyfacts <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
+                >
+                  BoE base rate <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
