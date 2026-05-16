@@ -24,22 +24,17 @@ export function AssumptionsModal({ open, onClose }: Props) {
         if (e.target === ref.current) onClose()
       }}
       aria-labelledby="assumptions-title"
-      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 p-0 rounded-xl max-w-2xl w-[calc(100vw-2rem)] bg-transparent backdrop:bg-black/50 dark:backdrop:bg-black/70"
+      className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 m-0 p-0 rounded-xl max-w-xl w-[calc(100vw-2rem)] bg-transparent backdrop:bg-black/50 dark:backdrop:bg-black/70"
     >
       <div className="bg-white dark:bg-slate-900 text-stone-900 dark:text-slate-100 rounded-xl border border-stone-200 dark:border-slate-700 shadow-xl p-6 max-h-[90vh] overflow-y-auto">
         <div className="flex items-start gap-3 mb-4">
           <Info className="h-5 w-5 text-orange-600 dark:text-sky-400 shrink-0 mt-0.5" />
-          <div className="flex-1">
-            <h3
-              id="assumptions-title"
-              className="text-base font-semibold text-stone-900 dark:text-slate-100"
-            >
-              How the verdict is calculated
-            </h3>
-            <p className="text-sm text-stone-600 dark:text-slate-400 mt-1">
-              The load-bearing assumptions behind the numbers above.
-            </p>
-          </div>
+          <h3
+            id="assumptions-title"
+            className="flex-1 text-base font-semibold text-stone-900 dark:text-slate-100"
+          >
+            How the verdict is calculated
+          </h3>
           <button
             type="button"
             onClick={onClose}
@@ -50,122 +45,51 @@ export function AssumptionsModal({ open, onClose }: Props) {
           </button>
         </div>
 
-        <div className="space-y-5 text-sm text-stone-700 dark:text-slate-300 leading-relaxed">
-          <Section title="The big one — invest the difference">
-            <p>
-              Both paths start with the same capital (deposit + stamp duty + legal +
-              mortgage fee). The buy path spends it on the house; the rent path keeps
-              it invested. Each month, whichever path has the lower out-of-pocket
-              cost invests the saving at your chosen return.
-            </p>
-            <p className="mt-2">
-              <strong className="text-stone-900 dark:text-slate-100">This is the load-bearing assumption.</strong> The verdict only
-              matches reality if you actually put the saving into investments every
-              month. If you'd spend it instead, the rent path's wealth in reality is
-              much lower than the model shows.
-            </p>
-          </Section>
+        <div className="space-y-4 text-sm text-stone-700 dark:text-slate-300 leading-relaxed">
+          <p>
+            <strong className="text-stone-900 dark:text-slate-100">Invest the difference.</strong>{' '}
+            Both paths start with the same capital (deposit + stamp duty + legal +
+            mortgage fee). The buy path spends it; the rent path keeps it
+            invested. Each month, the cheaper path invests the saving. The verdict
+            only matches reality if you actually do this every month.
+          </p>
 
-          <Section title="What “net worth at year N” means">
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <strong className="text-stone-900 dark:text-slate-100">Buy:</strong>{' '}
-                house value × (1 − selling cost) − remaining mortgage + any cash
-                invested. Assumes you sell to realise the equity; if you'd keep
-                living there the equity is on paper only.
-              </li>
-              <li>
-                <strong className="text-stone-900 dark:text-slate-100">Rent:</strong>{' '}
-                starting capital + all monthly savings, compounded at the investment
-                return.
-              </li>
-            </ul>
-          </Section>
+          <p>
+            <strong className="text-stone-900 dark:text-slate-100">Net worth at year N.</strong>{' '}
+            For buy: house value × (1 − selling cost) − any remaining mortgage +
+            cash invested. Assumes you'd sell to realise equity. For rent:
+            starting capital + monthly savings, all compounded.
+          </p>
 
-          <Section title="Investment returns">
-            <p>
-              Treated as tax-free — i.e. held inside an ISA (£20k/year contribution
-              limit). Realistic for typical deposit amounts. If your savings would
-              exceed the annual ISA cap, some money sits in a general account and
-              pays CGT / dividend tax, reducing the effective return.
-            </p>
-          </Section>
+          <p>
+            <strong className="text-stone-900 dark:text-slate-100">Investment returns</strong>{' '}
+            treated as tax-free — i.e. ISA-sheltered (£20k/year limit).
+          </p>
 
-          <Section title="Mortgage rate">
-            <p>
-              Held flat for the full term. In reality UK fixes are typically 2–5
-              years; when you remortgage the new rate may be different. The model
-              doesn't predict rate changes. The deposit/rate comparison popup is the
-              place to play with different rate scenarios.
-            </p>
-          </Section>
+          <p>
+            <strong className="text-stone-900 dark:text-slate-100">Mortgage rate</strong>{' '}
+            held flat for the full term. Use the deposit/rate comparison to
+            explore scenarios where it shifts.
+          </p>
 
-          <Section title="What isn't modelled">
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                Lumpy one-off repairs (boiler, roof, windows) — averaged into the
-                annual maintenance %.
-              </li>
-              <li>
-                Mortgage product fees on remortgage every few years.
-              </li>
-              <li>
-                Income, taxes other than CGT/SDLT, life events, dependents.
-              </li>
-              <li>
-                The psychological "forced savings" effect of a mortgage payment —
-                people often save more reliably when it's a non-skippable bill.
-              </li>
-              <li>
-                Risk preference. The verdict is pure expected value; it doesn't
-                weight the certainty of paying down a mortgage vs the volatility of
-                investment returns. (The Monte Carlo card gives a sense of the
-                variance.)
-              </li>
-            </ul>
-          </Section>
+          <p>
+            <strong className="text-stone-900 dark:text-slate-100">Not modelled:</strong>{' '}
+            lumpy one-off repairs (bundled into maintenance %), remortgage product
+            fees, income/non-housing tax, risk preference, the "forced savings"
+            psychology of a mortgage.
+          </p>
 
-          <Section title="Data and sources">
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <strong className="text-stone-900 dark:text-slate-100">Stamp duty bands:</strong>{' '}
-                England &amp; Northern Ireland rates as of April 2025 (Scotland LBTT and
-                Wales LTT differ — not modelled).
-              </li>
-              <li>
-                <strong className="text-stone-900 dark:text-slate-100">LTV rate spreads</strong>{' '}
-                (in the deposit comparison): calibrated against UK best-buy data,
-                May 2026.
-              </li>
-              <li>
-                <strong className="text-stone-900 dark:text-slate-100">Selling cost</strong>{' '}
-                default 2%: typical estate agent + solicitor estimate.
-              </li>
-              <li>
-                Other defaults (rents, growth rates, maintenance) are reasonable
-                starting points — edit to match your situation.
-              </li>
-            </ul>
-          </Section>
+          <p className="text-xs text-stone-500 dark:text-slate-400">
+            Stamp duty: England &amp; NI rates as of April 2025. LTV spreads in the
+            deposit comparison: UK best-buy data, May 2026.
+          </p>
 
-          <p className="text-xs text-stone-500 dark:text-slate-400 italic pt-2 border-t border-stone-200 dark:border-slate-700">
-            This is a model, not financial advice. The output should be treated as
-            directional — use it to think through trade-offs, not as a precise
-            prediction of your future net worth.
+          <p className="text-xs text-stone-500 dark:text-slate-400 italic pt-3 border-t border-stone-200 dark:border-slate-700">
+            A model, not financial advice. Output is directional — use it to think
+            through trade-offs.
           </p>
         </div>
       </div>
     </dialog>
-  )
-}
-
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <section>
-      <h4 className="text-sm font-semibold text-stone-900 dark:text-slate-100 mb-1">
-        {title}
-      </h4>
-      <div>{children}</div>
-    </section>
   )
 }
