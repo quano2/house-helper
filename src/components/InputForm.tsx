@@ -33,7 +33,6 @@ export function InputForm({ inputs, onChange }: Props) {
         <Field
           label="Mortgage rate"
           unit="% per year"
-          hint="Held flat for the full term. UK fixes are 2–5y then remortgage — this model ignores that."
           value={inputs.mortgageRate}
           onChange={(v) => update('mortgageRate', v)}
           min={0}
