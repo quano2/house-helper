@@ -6,7 +6,7 @@ import type { Inputs } from './types'
  */
 export const defaultInputs: Inputs = {
   housePrice: 350_000,
-  depositPercent: 0.15,
+  depositAmount: 52_500, // 15% of the default house price
   mortgageRate: 0.045,
   mortgageTermYears: 25,
   firstTimeBuyer: false,

@@ -12,6 +12,13 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
   const update = <K extends keyof Inputs>(key: K, value: Inputs[K]) =>
     onChange({ ...inputs, [key]: value })
 
+  const depositPercent =
+    inputs.housePrice > 0 ? inputs.depositAmount / inputs.housePrice : 0
+  const depositHint =
+    inputs.housePrice > 0
+      ? `${(depositPercent * 100).toFixed(1)}% of house price`
+      : 'Set a house price first'
+
   return (
     <div className="space-y-8">
       <Section title="The purchase" icon={Home} columnsClass={fieldColumnsClass}>
@@ -25,12 +32,12 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         />
         <Field
           label="Deposit"
-          unit="%"
-          value={inputs.depositPercent}
-          onChange={(v) => update('depositPercent', v)}
+          unit="£"
+          hint={depositHint}
+          value={inputs.depositAmount}
+          onChange={(v) => update('depositAmount', v)}
           min={0}
-          max={1}
-          asPercent
+          step={1000}
         />
         <Field
           label="Mortgage rate"

@@ -1,7 +1,7 @@
 export type Inputs = {
   // Purchase
   housePrice: number
-  depositPercent: number // 0..1
+  depositAmount: number // £ — capped at housePrice in the simulator
   mortgageRate: number // annual, 0..1 (e.g. 0.045)
   mortgageTermYears: number
   firstTimeBuyer: boolean

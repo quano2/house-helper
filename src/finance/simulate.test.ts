@@ -4,7 +4,7 @@ import type { Inputs } from './types'
 
 const baseInputs: Inputs = {
   housePrice: 350_000,
-  depositPercent: 0.15,
+  depositAmount: 52_500,
   mortgageRate: 0.045,
   mortgageTermYears: 25,
   firstTimeBuyer: false,
@@ -39,8 +39,14 @@ describe('simulate', () => {
 
   it('totalUpfrontBuyCost includes deposit + SDLT + fees', () => {
     const result = simulate(baseInputs)
-    const expected = 350_000 * 0.15 + 7500 + 2000 + 999
+    const expected = 52_500 + 7500 + 2000 + 999
     expect(result.totalUpfrontBuyCost).toBeCloseTo(expected, 2)
+  })
+
+  it('caps deposit at house price (cash buyer with surplus)', () => {
+    const result = simulate({ ...baseInputs, depositAmount: 500_000 })
+    // Upfront should reflect £350k deposit (capped), not £500k
+    expect(result.totalUpfrontBuyCost).toBeCloseTo(350_000 + 7500 + 2000 + 999, 2)
   })
 
   it('house value grows roughly at appreciation rate', () => {

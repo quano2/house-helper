@@ -22,7 +22,7 @@ export type RatePaths = {
 export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationResult {
   const {
     housePrice,
-    depositPercent,
+    depositAmount,
     mortgageRate,
     mortgageTermYears,
     firstTimeBuyer,
@@ -39,8 +39,11 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
   } = inputs
 
   const sdlt = calculateSdlt(housePrice, { firstTimeBuyer })
-  const deposit = housePrice * depositPercent
-  const loanAmount = housePrice - deposit
+  // Cap the deposit at the house price — a deposit larger than the house
+  // means "cash buyer", so no loan; any surplus would just sit in the user's
+  // pocket (and isn't modelled separately).
+  const deposit = Math.min(Math.max(0, depositAmount), housePrice)
+  const loanAmount = Math.max(0, housePrice - deposit)
   const totalUpfrontBuyCost =
     deposit + sdlt + legalAndSurveyFees + mortgageArrangementFee
 
