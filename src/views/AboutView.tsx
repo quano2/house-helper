@@ -3,7 +3,7 @@ export function AboutView() {
     <article className="max-w-3xl mx-auto space-y-12 text-stone-700 dark:text-slate-300 leading-relaxed">
       <Section title="The buy-vs-rent question, properly modelled">
         <p>
-          Most online calculators answer a different question than the one you
+          Most online calculators answer a different question from the one you
           actually want answered. They tell you the monthly cost of a mortgage and
           the monthly cost of renting, then declare a winner based on which is
           cheaper. That's wrong, because it ignores what happens to the money you

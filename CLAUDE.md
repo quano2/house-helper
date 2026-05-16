@@ -29,7 +29,7 @@ A web calculator that compares buying vs renting over time using the proper **"i
 
 ```
 src/
-  finance/                Pure TypeScript math (no React)
+  finance/                Pure TypeScript maths (no React)
     types.ts              Inputs, YearResult, SimulationResult types
     defaults.ts           Default input values (with calibration date in comment)
     sdlt.ts               UK stamp duty calculator (Apr 2025 rates)
@@ -122,7 +122,7 @@ README.md                 Public-facing summary
 - **Be exhaustive in brainstorms.** Don't pre-curate or filter for "what matters" — include small/minor items too, Joe will prune. Pre-filtering robs him of the call.
 - **Plain English over jargon.** HRAD → "Second home / buy-to-let". SDLT → "stamp duty". "Years to simulate" → "Time horizon" (renamed because the original didn't read as a real-world question).
 - **Push back where useful**, with reasons. Joe asks "should we do X?" expecting honest analysis, not a yes-bot.
-- **Honest about trade-offs** rather than overselling. He's specifically asked "are you happy with the math" and similar — wants known limitations called out.
+- **Honest about trade-offs** rather than overselling. He's specifically asked "are you happy with the maths" and similar — wants known limitations called out.
 - **Likes seeing options to choose between** — themes / layouts / dark variants / area pickers all built as 3-way selectors so he could pick. Same pattern works well for new design decisions.
 - **Project is personal, not a portfolio piece.** Don't inflate scope for "looking impressive". Public deployment is "in case anyone finds it useful", not a product.
 - **Joe is new to Mac dev.** Was set up at start of project (Homebrew, Node, gh CLI). All working now.
@@ -132,7 +132,7 @@ README.md                 Public-facing summary
 ## Deployment
 
 - Push to `main` → GitHub Action runs `npm ci && npm test && npm run build` → publishes `dist/` to Pages → live at https://quano2.github.io/house-helper/ in ~1–2 min.
-- **Test failures block deploy** (intentional — broken math shouldn't reach the live site).
+- **Test failures block deploy** (intentional — broken maths shouldn't reach the live site).
 - Vite config has `base: './'` so build output works at any URL prefix (also lets you open `dist/index.html` directly from filesystem as a sanity check).
 
 ---

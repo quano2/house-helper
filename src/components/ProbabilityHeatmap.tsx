@@ -24,7 +24,7 @@ export function ProbabilityHeatmap({ inputs }: Props) {
     return { grid: all, max }
   }, [inputs])
 
-  function cellColor(diff: number): string {
+  function cellColour(diff: number): string {
     if (diff === 0) return 'bg-stone-100 dark:bg-slate-800'
     const intensity = Math.min(1, Math.abs(diff) / Math.max(1, cells.max))
     // Map intensity to a 50-700 colour
@@ -100,7 +100,7 @@ export function ProbabilityHeatmap({ inputs }: Props) {
                     <td
                       key={j}
                       title={`Rate ${(cell.rate * 100).toFixed(1)}%, horizon ${cell.horizon}y → ${cell.diff >= 0 ? 'buy' : 'rent'} ahead by ${formatGBPCompact(Math.abs(cell.diff))}`}
-                      className={`${cellColor(cell.diff)} px-3 py-3 text-center tabular-nums text-stone-900 dark:text-slate-100 ${isUser ? 'outline outline-2 outline-orange-600 dark:outline-sky-400 outline-offset-[-2px] font-bold' : ''}`}
+                      className={`${cellColour(cell.diff)} px-3 py-3 text-center tabular-nums text-stone-900 dark:text-slate-100 ${isUser ? 'outline outline-2 outline-orange-600 dark:outline-sky-400 outline-offset-[-2px] font-bold' : ''}`}
                     >
                       {cell.diff >= 0 ? '+' : '−'}
                       {formatGBPCompact(Math.abs(cell.diff)).replace('£', '')}
