@@ -15,7 +15,24 @@ type Props = {
    * receives the divided value. Use for fractional rates / percentages.
    */
   asPercent?: boolean
+  /**
+   * If true, display the value with thousands separators when not focused
+   * (e.g. "350,000"). Becomes raw digits while focused for easy editing.
+   * Only meaningful for whole-number money fields.
+   */
+  thousands?: boolean
   children?: ReactNode
+}
+
+const thousandsFormatter = new Intl.NumberFormat('en-GB', {
+  maximumFractionDigits: 0,
+})
+
+function formatForDisplay(value: number, focused: boolean, thousands?: boolean): string {
+  if (!Number.isFinite(value)) return ''
+  if (focused) return String(value)
+  if (thousands) return thousandsFormatter.format(value)
+  return String(value)
 }
 
 export function Field({
@@ -28,16 +45,20 @@ export function Field({
   max,
   step,
   asPercent,
+  thousands,
 }: Props) {
   const displayValue = asPercent ? Number((value * 100).toFixed(4)) : value
   const displayStep = step ?? (asPercent ? 0.1 : 1)
 
-  const [text, setText] = useState(String(displayValue))
+  const [text, setText] = useState(() => formatForDisplay(displayValue, false, thousands))
   const [focused, setFocused] = useState(false)
 
   useEffect(() => {
-    if (!focused) setText(String(displayValue))
-  }, [displayValue, focused])
+    if (!focused) setText(formatForDisplay(displayValue, false, thousands))
+  }, [displayValue, focused, thousands])
+
+  // Comma-formatted text needs type="text" — type="number" rejects "350,000"
+  const inputType = thousands ? 'text' : 'number'
 
   return (
     <label className="block">
@@ -46,24 +67,31 @@ export function Field({
         {unit && <span className="text-xs text-stone-500 dark:text-stone-500">{unit}</span>}
       </div>
       <input
-        type="number"
+        type={inputType}
+        inputMode={thousands ? 'decimal' : undefined}
         className="mt-1 w-full rounded-md border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 text-sm tabular-nums focus:border-orange-500 dark:focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-500 dark:focus:ring-orange-400"
         value={text}
-        min={min}
-        max={max}
-        step={displayStep}
-        onFocus={() => setFocused(true)}
+        min={!thousands ? min : undefined}
+        max={!thousands ? max : undefined}
+        step={!thousands ? displayStep : undefined}
+        onFocus={() => {
+          setFocused(true)
+          // Switch to raw digits so editing isn't fighting comma positions
+          setText(formatForDisplay(displayValue, true, thousands))
+        }}
         onBlur={() => {
           setFocused(false)
-          if (text === '' || !Number.isFinite(Number(text))) {
-            setText(String(displayValue))
+          const cleaned = text.replace(/,/g, '')
+          if (cleaned === '' || !Number.isFinite(Number(cleaned))) {
+            setText(formatForDisplay(displayValue, false, thousands))
           }
         }}
         onChange={(e) => {
           const next = e.target.value
           setText(next)
-          if (next === '') return
-          const v = Number(next)
+          const cleaned = next.replace(/,/g, '')
+          if (cleaned === '') return
+          const v = Number(cleaned)
           if (Number.isFinite(v)) {
             onChange(asPercent ? v / 100 : v)
           }

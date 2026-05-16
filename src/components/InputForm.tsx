@@ -28,6 +28,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('housePrice', v)}
           min={0}
           step={5000}
+          thousands
         />
         <Field
           label="Deposit"
@@ -37,6 +38,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('depositAmount', v)}
           min={0}
           step={1000}
+          thousands
         />
         <Field
           label="Mortgage rate"
@@ -70,6 +72,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('legalAndSurveyFees', v)}
           min={0}
           step={100}
+          thousands
         />
         <Field
           label="Mortgage arrangement fee"
@@ -78,6 +81,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('mortgageArrangementFee', v)}
           min={0}
           step={50}
+          thousands
         />
         <Field
           label="Maintenance"
@@ -95,6 +99,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('buildingsInsuranceAnnual', v)}
           min={0}
           step={50}
+          thousands
         />
         <Field
           label="Service charge & ground rent"
@@ -104,6 +109,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('serviceChargeAnnual', v)}
           min={0}
           step={100}
+          thousands
         />
         <Field
           label="Selling cost"
@@ -124,6 +130,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('monthlyRent', v)}
           min={0}
           step={50}
+          thousands
         />
         <Field
           label="Rent inflation"
@@ -141,6 +148,7 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('movingCostPerMove', v)}
           min={0}
           step={100}
+          thousands
         />
         <Field
           label="Move every"

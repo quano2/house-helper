@@ -8,26 +8,61 @@ import { simulate } from './finance/simulate'
 import { readInputsFromUrl, writeInputsToUrl } from './utils/url'
 
 const THEME_STORAGE_KEY = 'house-helper:theme'
+const DARK_VARIANT_STORAGE_KEY = 'house-helper:dark-variant'
+
+type DarkVariant = 'warm' | 'neutral' | 'cool'
+
+// All variant classes are spelled out as literal strings so Tailwind's
+// class scanner picks them up — never composed dynamically.
+const DARK_VARIANTS: Record<
+  DarkVariant,
+  { label: string; pageBg: string; headerBg: string; iconColor: string }
+> = {
+  warm: {
+    label: 'Warm',
+    pageBg: 'dark:bg-stone-950',
+    headerBg: 'dark:from-amber-950 dark:via-stone-900 dark:to-stone-950',
+    iconColor: 'dark:text-orange-400',
+  },
+  neutral: {
+    label: 'Neutral',
+    pageBg: 'dark:bg-zinc-950',
+    headerBg: 'dark:from-zinc-900 dark:via-zinc-900 dark:to-zinc-950',
+    iconColor: 'dark:text-orange-400',
+  },
+  cool: {
+    label: 'Cool',
+    pageBg: 'dark:bg-slate-950',
+    headerBg: 'dark:from-slate-900 dark:via-indigo-950 dark:to-slate-950',
+    iconColor: 'dark:text-sky-400',
+  },
+}
 
 function getInitialDark(): boolean {
   if (typeof window === 'undefined') return false
   const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
   if (stored === 'dark') return true
   if (stored === 'light') return false
-  // No manual override — follow the OS preference
   return window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
+function getInitialDarkVariant(): DarkVariant {
+  if (typeof window === 'undefined') return 'warm'
+  const stored = window.localStorage.getItem(DARK_VARIANT_STORAGE_KEY)
+  if (stored === 'warm' || stored === 'neutral' || stored === 'cool') return stored
+  return 'warm'
 }
 
 function App() {
   const [inputs, setInputs] = useState(() => readInputsFromUrl())
   const [isDark, setIsDark] = useState(getInitialDark)
+  const [darkVariant, setDarkVariant] = useState<DarkVariant>(getInitialDarkVariant)
 
   useEffect(() => {
     writeInputsToUrl(inputs)
   }, [inputs])
 
-  // Follow OS theme changes live — but only when the user hasn't set a manual
-  // override. If they've toggled, their choice wins until they clear storage.
+  // Follow OS theme changes live — only when no manual override is stored
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     const handler = (e: MediaQueryListEvent) => {
@@ -45,22 +80,37 @@ function App() {
       try {
         window.localStorage.setItem(THEME_STORAGE_KEY, next ? 'dark' : 'light')
       } catch {
-        // ignore — private mode / storage disabled
+        /* ignore */
       }
       return next
     })
   }
 
+  function pickDarkVariant(v: DarkVariant) {
+    setDarkVariant(v)
+    try {
+      window.localStorage.setItem(DARK_VARIANT_STORAGE_KEY, v)
+    } catch {
+      /* ignore */
+    }
+  }
+
   const result = useMemo(() => simulate(inputs), [inputs])
+  const variant = DARK_VARIANTS[darkVariant]
 
   return (
     <div
-      className={`${isDark ? 'dark' : ''} min-h-screen bg-amber-50/40 dark:bg-stone-950 text-stone-900 dark:text-stone-100`}
+      className={`${isDark ? 'dark' : ''} min-h-screen bg-amber-50/40 ${variant.pageBg} text-stone-900 dark:text-stone-100`}
     >
-      <header className="bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950 dark:via-stone-900 dark:to-stone-950 border-b border-amber-200 dark:border-stone-800">
+      <header
+        className={`bg-gradient-to-br from-amber-100 to-orange-100 ${variant.headerBg} border-b border-amber-200 dark:border-stone-800`}
+      >
         <div className="mx-auto max-w-6xl px-6 py-8">
           <div className="flex items-center gap-3">
-            <Home className="h-8 w-8 text-orange-600 dark:text-orange-400" aria-hidden="true" />
+            <Home
+              className={`h-8 w-8 text-orange-600 ${variant.iconColor}`}
+              aria-hidden="true"
+            />
             <h1 className="text-3xl font-semibold tracking-tight text-stone-900 dark:text-amber-50">
               House Helper
             </h1>
@@ -69,6 +119,25 @@ function App() {
           <p className="mt-2 text-sm text-stone-700 dark:text-amber-200/80">
             UK buy-vs-rent calculator for owner-occupiers. All numbers editable. Stamp duty rates: April 2025.
           </p>
+          {isDark && (
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs print:hidden">
+              <span className="text-stone-400">Dark style:</span>
+              {(Object.keys(DARK_VARIANTS) as DarkVariant[]).map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => pickDarkVariant(v)}
+                  className={
+                    darkVariant === v
+                      ? 'bg-amber-100 text-stone-900 px-2.5 py-0.5 rounded-full font-medium'
+                      : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800 px-2.5 py-0.5 rounded-full'
+                  }
+                >
+                  {DARK_VARIANTS[v].label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 
