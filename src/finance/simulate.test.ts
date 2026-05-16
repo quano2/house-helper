@@ -17,6 +17,8 @@ const baseInputs: Inputs = {
   monthlyRent: 1500,
   movingCostPerMove: 0,
   renterMovesEveryYears: 0,
+  councilTaxAnnual: 0,
+  utilitiesAnnual: 0,
   houseAppreciationAnnual: 0.03,
   rentInflationAnnual: 0.03,
   investmentReturnAnnual: 0.07,

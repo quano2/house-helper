@@ -23,6 +23,11 @@ export type Inputs = {
   movingCostPerMove: number // £ per move (applies only to renter; buyer's move is in upfront/selling costs)
   renterMovesEveryYears: number // 0 disables
 
+  // Shared living costs — same in either scenario, so they don't affect the
+  // verdict. Tracked only for the monthly affordability display.
+  councilTaxAnnual: number
+  utilitiesAnnual: number
+
   // Market assumptions (annual, 0..1)
   houseAppreciationAnnual: number
   rentInflationAnnual: number

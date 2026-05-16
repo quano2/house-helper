@@ -26,6 +26,10 @@ export const defaultInputs: Inputs = {
   movingCostPerMove: 1500,
   renterMovesEveryYears: 3,
 
+  // Shared living costs (informational only; don't affect verdict)
+  councilTaxAnnual: 2200, // ~Band D UK average
+  utilitiesAnnual: 2400, // ~£200/month — varies hugely by usage
+
   houseAppreciationAnnual: 0.03,
   rentInflationAnnual: 0.03,
   investmentReturnAnnual: 0.07,

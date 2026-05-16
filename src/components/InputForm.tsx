@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Home, Key, Scale, TrendingUp, Wallet } from 'lucide-react'
+import { Home, Key, Receipt, Scale, TrendingUp, Wallet } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { formatGBP } from '../utils/format'
 import { DepositComparison } from './DepositComparison'
@@ -257,6 +257,31 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('renterMovesEveryYears', v)}
           min={0}
           max={30}
+        />
+      </Section>
+
+      <Section title="Living costs (same in both)" icon={Receipt}>
+        <Field
+          label="Council tax"
+          prefix="£"
+          unit="/year"
+          hint="Same regardless of buy or rent — informational only"
+          value={inputs.councilTaxAnnual}
+          onChange={(v) => update('councilTaxAnnual', v)}
+          min={0}
+          step={50}
+          thousands
+        />
+        <Field
+          label="Utilities"
+          prefix="£"
+          unit="/year"
+          hint="Energy, water, broadband. Roughly the same for either path."
+          value={inputs.utilitiesAnnual}
+          onChange={(v) => update('utilitiesAnnual', v)}
+          min={0}
+          step={50}
+          thousands
         />
       </Section>
 

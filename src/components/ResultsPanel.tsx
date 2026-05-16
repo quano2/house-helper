@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Info, TrendingDown, TrendingUp } from 'lucide-react'
+import { Info, Receipt, TrendingDown, TrendingUp } from 'lucide-react'
 import type { Inputs, SimulationResult } from '../finance/types'
 import { formatGBP } from '../utils/format'
 import { AssumptionsModal } from './AssumptionsModal'
@@ -72,19 +72,21 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
 
       <MonthlyCostsCard inputs={inputs} monthlyMortgagePayment={result.monthlyMortgagePayment} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <StatCard label="Stamp duty" value={formatGBP(result.sdlt)} />
-        <StatCard
-          label="Total upfront buy cost"
-          value={formatGBP(result.totalUpfrontBuyCost)}
-          hint="Deposit + stamp duty + legal + mortgage fee"
-        />
+      <UpfrontCostBreakdown inputs={inputs} sdlt={result.sdlt} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {finalYear && (
           <StatCard
             label={`House value in year ${horizonYears}`}
             value={formatGBP(finalYear.houseValue)}
+            hint="Today's price grown at your appreciation rate"
           />
         )}
+        <StatCard
+          label="Monthly mortgage P&I"
+          value={formatGBP(result.monthlyMortgagePayment)}
+          hint="Principal + interest only"
+        />
       </div>
 
       {finalYear && (
@@ -121,6 +123,7 @@ function MonthlyCostsCard({
   const service = inputs.serviceChargeAnnual / 12
   const buyTotal = monthlyMortgagePayment + maintenance + insurance + service
   const rent = inputs.monthlyRent
+  const sharedMonthly = (inputs.councilTaxAnnual + inputs.utilitiesAnnual) / 12
   const diff = buyTotal - rent
   const pct = rent > 0 ? Math.abs(diff) / rent : 0
 
@@ -175,6 +178,72 @@ function MonthlyCostsCard({
           <>Buy and rent monthly costs are equal in year 1.</>
         )}
       </p>
+
+      {sharedMonthly > 0 && (
+        <div className="mt-3 pt-3 border-t border-stone-200 dark:border-slate-700 text-sm">
+          <p className="text-xs uppercase tracking-wide font-semibold text-stone-600 dark:text-slate-400">
+            Plus, both paths also pay
+          </p>
+          <p className="mt-1 text-stone-700 dark:text-slate-300">
+            <span className="font-semibold tabular-nums text-stone-900 dark:text-slate-100">
+              {formatGBP(sharedMonthly)}/month
+            </span>{' '}
+            for council tax + utilities. So your true monthly is roughly{' '}
+            <span className="font-semibold tabular-nums text-stone-900 dark:text-slate-100">
+              {formatGBP(buyTotal + sharedMonthly)}
+            </span>{' '}
+            (buy) /{' '}
+            <span className="font-semibold tabular-nums text-stone-900 dark:text-slate-100">
+              {formatGBP(rent + sharedMonthly)}
+            </span>{' '}
+            (rent).
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function UpfrontCostBreakdown({ inputs, sdlt }: { inputs: Inputs; sdlt: number }) {
+  const cappedDeposit = Math.min(Math.max(0, inputs.depositAmount), inputs.housePrice)
+  const total = cappedDeposit + sdlt + inputs.legalAndSurveyFees + inputs.mortgageArrangementFee
+  const rows = [
+    { label: 'Deposit', value: cappedDeposit },
+    { label: 'Stamp duty', value: sdlt },
+    { label: 'Legal + survey', value: inputs.legalAndSurveyFees },
+    { label: 'Arrangement fee', value: inputs.mortgageArrangementFee },
+  ]
+
+  return (
+    <div className="rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+      <div className="flex items-start gap-3 mb-4">
+        <Receipt className="h-5 w-5 text-orange-600 dark:text-sky-400 shrink-0 mt-0.5" />
+        <div className="flex-1">
+          <h3 className="text-sm font-semibold text-stone-900 dark:text-slate-100">
+            Upfront cost to buy
+          </h3>
+          <p className="text-xs text-stone-500 dark:text-slate-400 mt-0.5">
+            The cash you need on day one — the cost of getting in the door.
+          </p>
+        </div>
+      </div>
+
+      <dl className="space-y-1.5 text-sm">
+        {rows.map((r) => (
+          <div key={r.label} className="flex justify-between">
+            <dt className="text-stone-600 dark:text-slate-400">{r.label}</dt>
+            <dd className="tabular-nums text-stone-900 dark:text-slate-100">
+              {formatGBP(r.value)}
+            </dd>
+          </div>
+        ))}
+        <div className="flex justify-between pt-2 mt-1 border-t border-stone-200 dark:border-slate-700">
+          <dt className="font-semibold text-stone-900 dark:text-slate-100">Total upfront</dt>
+          <dd className="tabular-nums font-bold text-lg text-stone-900 dark:text-slate-100">
+            {formatGBP(total)}
+          </dd>
+        </div>
+      </dl>
     </div>
   )
 }
