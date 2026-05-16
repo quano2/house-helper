@@ -91,13 +91,31 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
           step={50}
         />
         <Field
-          label="Service charge"
-          unit="£/year (leasehold)"
-          hint="0 if freehold"
+          label="Service charge & ground rent"
+          unit="£/year"
+          hint="Leasehold only — 0 if freehold"
           value={inputs.serviceChargeAnnual}
           onChange={(v) => update('serviceChargeAnnual', v)}
           min={0}
           step={100}
+        />
+        <Field
+          label="Re-mortgage fee"
+          unit="£ per renewal"
+          hint="Product fee when switching deals"
+          value={inputs.remortgageFee}
+          onChange={(v) => update('remortgageFee', v)}
+          min={0}
+          step={50}
+        />
+        <Field
+          label="Re-mortgage every"
+          unit="years"
+          hint="UK fixed deals are typically 2–5 years"
+          value={inputs.remortgageFeeEveryYears}
+          onChange={(v) => update('remortgageFeeEveryYears', v)}
+          min={0}
+          max={30}
         />
         <Field
           label="Selling cost"
@@ -126,6 +144,24 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
           onChange={(v) => update('rentInflationAnnual', v)}
           min={0}
           asPercent
+        />
+        <Field
+          label="Moving cost"
+          unit="£ per move"
+          hint="Removals each time you change rental"
+          value={inputs.movingCostPerMove}
+          onChange={(v) => update('movingCostPerMove', v)}
+          min={0}
+          step={100}
+        />
+        <Field
+          label="Move every"
+          unit="years"
+          hint="UK renters typically move every 2–3 years"
+          value={inputs.renterMovesEveryYears}
+          onChange={(v) => update('renterMovesEveryYears', v)}
+          min={0}
+          max={30}
         />
       </Section>
 

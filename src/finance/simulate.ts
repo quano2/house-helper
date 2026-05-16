@@ -27,6 +27,10 @@ export function simulate(inputs: Inputs): SimulationResult {
     serviceChargeAnnual,
     sellingCostPercent,
     monthlyRent,
+    movingCostPerMove,
+    renterMovesEveryYears,
+    remortgageFee,
+    remortgageFeeEveryYears,
     houseAppreciationAnnual,
     rentInflationAnnual,
     investmentReturnAnnual,
@@ -101,9 +105,24 @@ export function simulate(inputs: Inputs): SimulationResult {
     // House appreciates monthly
     houseValue *= 1 + monthlyAppreciation
 
-    // Year boundary: snapshot + annual step-ups
+    // Year boundary: discrete events, then snapshot + annual step-ups
     if (month % 12 === 0) {
       const year = month / 12
+
+      // Renter pays a moving cost every N years (drawn from invested savings)
+      if (renterMovesEveryYears > 0 && year % renterMovesEveryYears === 0) {
+        rentCash -= movingCostPerMove
+      }
+
+      // Buyer pays a re-mortgage product fee every M years while still on a mortgage
+      if (
+        remortgageFeeEveryYears > 0 &&
+        year % remortgageFeeEveryYears === 0 &&
+        year < mortgageTermYears
+      ) {
+        buyCash -= remortgageFee
+      }
+
       const saleProceeds = houseValue * (1 - sellingCostPercent)
       const buyEquityIfSold = saleProceeds - mortgageBalance
       const buyNetWorth = buyEquityIfSold + buyCash

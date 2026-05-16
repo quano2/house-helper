@@ -13,13 +13,19 @@ export type Inputs = {
   // Ongoing buying
   maintenancePercent: number // annual, 0..1 (e.g. 0.01 = 1% of house value/yr)
   buildingsInsuranceAnnual: number // £/yr
-  serviceChargeAnnual: number // £/yr (leasehold; 0 if freehold)
+  serviceChargeAnnual: number // £/yr (leasehold service charge + ground rent; 0 if freehold)
+
+  // Periodic mortgage product fees (e.g. switching deals every few years)
+  remortgageFee: number // £ per renewal
+  remortgageFeeEveryYears: number // 0 disables
 
   // Selling
   sellingCostPercent: number // 0..1 (agent + legal as % of sale price)
 
   // Renting
   monthlyRent: number
+  movingCostPerMove: number // £ per move (applies only to renter; buyer's move is in upfront/selling costs)
+  renterMovesEveryYears: number // 0 disables
 
   // Market assumptions (annual, 0..1)
   houseAppreciationAnnual: number

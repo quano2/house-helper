@@ -18,9 +18,14 @@ export const defaultInputs: Inputs = {
   buildingsInsuranceAnnual: 300,
   serviceChargeAnnual: 0,
 
+  remortgageFee: 999,
+  remortgageFeeEveryYears: 5,
+
   sellingCostPercent: 0.02,
 
   monthlyRent: 1500,
+  movingCostPerMove: 1500,
+  renterMovesEveryYears: 3,
 
   houseAppreciationAnnual: 0.03,
   rentInflationAnnual: 0.03,
