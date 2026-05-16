@@ -89,7 +89,7 @@ export function ToggleField({
     <label className="flex items-start gap-3 cursor-pointer">
       <input
         type="checkbox"
-        className="mt-1 h-4 w-4 rounded border-stone-300 dark:border-stone-600 dark:bg-stone-800 text-orange-600 focus:ring-orange-500"
+        className="mt-1 h-4 w-4 rounded border-stone-300 dark:border-stone-600 accent-orange-600 focus:ring-orange-500"
         checked={value}
         onChange={(e) => onChange(e.target.checked)}
       />
