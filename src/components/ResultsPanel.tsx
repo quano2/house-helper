@@ -3,7 +3,6 @@ import type { Inputs, SimulationResult } from '../finance/types'
 import type { ThemeTokens } from '../themes'
 import { formatGBP } from '../utils/format'
 import { BreakEvenChart } from './BreakEvenChart'
-import { HistoricalPanel } from './HistoricalPanel'
 import { MonteCarloPanel } from './MonteCarloPanel'
 
 type Props = {
@@ -93,7 +92,6 @@ export function ResultsPanel({ inputs, result, horizonYears, theme }: Props) {
       )}
 
       <MonteCarloPanel inputs={inputs} />
-      <HistoricalPanel inputs={inputs} />
     </div>
   )
 }
