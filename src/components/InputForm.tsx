@@ -4,15 +4,16 @@ import { Field, ToggleField, Section } from './Field'
 type Props = {
   inputs: Inputs
   onChange: (inputs: Inputs) => void
+  fieldColumnsClass?: string
 }
 
-export function InputForm({ inputs, onChange }: Props) {
+export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
   const update = <K extends keyof Inputs>(key: K, value: Inputs[K]) =>
     onChange({ ...inputs, [key]: value })
 
   return (
     <div className="space-y-8">
-      <Section title="The purchase">
+      <Section title="The purchase" columnsClass={fieldColumnsClass}>
         <Field
           label="House price"
           unit="£"
@@ -54,7 +55,7 @@ export function InputForm({ inputs, onChange }: Props) {
         />
       </Section>
 
-      <Section title="Buying — other costs">
+      <Section title="Buying — other costs" columnsClass={fieldColumnsClass}>
         <Field
           label="Legal + survey fees"
           unit="£ one-off"
@@ -108,7 +109,7 @@ export function InputForm({ inputs, onChange }: Props) {
         />
       </Section>
 
-      <Section title="Renting">
+      <Section title="Renting" columnsClass={fieldColumnsClass}>
         <Field
           label="Monthly rent"
           unit="£"
@@ -127,7 +128,7 @@ export function InputForm({ inputs, onChange }: Props) {
         />
       </Section>
 
-      <Section title="Market assumptions">
+      <Section title="Market assumptions" columnsClass={fieldColumnsClass}>
         <Field
           label="House price growth"
           unit="% per year"
