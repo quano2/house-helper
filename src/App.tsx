@@ -7,13 +7,49 @@ import { SavedScenarios } from './components/SavedScenarios'
 import { simulate } from './finance/simulate'
 import { readInputsFromUrl, writeInputsToUrl } from './utils/url'
 
+const THEME_STORAGE_KEY = 'house-helper:theme'
+
+function getInitialDark(): boolean {
+  if (typeof window === 'undefined') return false
+  const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
+  if (stored === 'dark') return true
+  if (stored === 'light') return false
+  // No manual override — follow the OS preference
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
 function App() {
   const [inputs, setInputs] = useState(() => readInputsFromUrl())
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(getInitialDark)
 
   useEffect(() => {
     writeInputsToUrl(inputs)
   }, [inputs])
+
+  // Follow OS theme changes live — but only when the user hasn't set a manual
+  // override. If they've toggled, their choice wins until they clear storage.
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => {
+      const stored = window.localStorage.getItem(THEME_STORAGE_KEY)
+      if (stored === 'dark' || stored === 'light') return
+      setIsDark(e.matches)
+    }
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  function toggleDark() {
+    setIsDark((d) => {
+      const next = !d
+      try {
+        window.localStorage.setItem(THEME_STORAGE_KEY, next ? 'dark' : 'light')
+      } catch {
+        // ignore — private mode / storage disabled
+      }
+      return next
+    })
+  }
 
   const result = useMemo(() => simulate(inputs), [inputs])
 
@@ -28,7 +64,7 @@ function App() {
             <h1 className="text-3xl font-semibold tracking-tight text-stone-900 dark:text-amber-50">
               House Helper
             </h1>
-            <HeaderActions isDark={isDark} onToggleDark={() => setIsDark((d) => !d)} />
+            <HeaderActions isDark={isDark} onToggleDark={toggleDark} />
           </div>
           <p className="mt-2 text-sm text-stone-700 dark:text-amber-200/80">
             UK buy-vs-rent calculator for owner-occupiers. All numbers editable. Stamp duty rates: April 2025.
