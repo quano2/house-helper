@@ -90,7 +90,6 @@ export function InputForm({ inputs, onChange }: Props) {
         onApply={(depositAmount, mortgageRate) =>
           onChange({ ...inputs, depositAmount, mortgageRate })
         }
-        onUpdateAvailableCapital={(v) => update('availableCapital', v)}
         onClose={() => setComparisonOpen(false)}
       />
       <Section title="The purchase" icon={Home}>

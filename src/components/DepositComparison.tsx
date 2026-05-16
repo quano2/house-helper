@@ -1,15 +1,14 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { ExternalLink, Scale, X } from 'lucide-react'
 import type { Inputs } from '../finance/types'
+import { calculateSdlt } from '../finance/sdlt'
 import { simulate } from '../finance/simulate'
 import { formatGBP } from '../utils/format'
-import { Field } from './Field'
 
 type Props = {
   open: boolean
   inputs: Inputs
   onApply: (depositAmount: number, mortgageRate: number) => void
-  onUpdateAvailableCapital: (v: number) => void
   onClose: () => void
 }
 
@@ -57,7 +56,6 @@ export function DepositComparison({
   open,
   inputs,
   onApply,
-  onUpdateAvailableCapital,
   onClose,
 }: Props) {
   const ref = useRef<HTMLDialogElement>(null)
@@ -76,6 +74,27 @@ export function DepositComparison({
   const userSpread = spreadForLtv(userLtv)
   const bestRate = Math.max(0, inputs.mortgageRate - userSpread)
 
+  // Auto-set a common "pool" size = the largest row's upfront cost. That way
+  // every row's rent path invests the same starting capital, instead of the
+  // smaller-deposit rows being penalised by having less K. Makes the
+  // "best split of my cash" question answerable directly. The pool size only
+  // shifts all rows by the same amount, so the *ordering* (which row wins)
+  // is what you read off the table.
+  const sdlt = useMemo(
+    () => calculateSdlt(inputs.housePrice, { firstTimeBuyer: inputs.firstTimeBuyer }),
+    [inputs.housePrice, inputs.firstTimeBuyer],
+  )
+  const fixedFees = sdlt + inputs.legalAndSurveyFees + inputs.mortgageArrangementFee
+  const pool = useMemo(() => {
+    let max = 0
+    for (const band of LTV_BANDS) {
+      const dep = Math.round(inputs.housePrice * band.depositPercent)
+      const k = dep + fixedFees
+      if (k > max) max = k
+    }
+    return max
+  }, [inputs.housePrice, fixedFees])
+
   const rows = useMemo(
     () =>
       LTV_BANDS.map((band) => {
@@ -85,6 +104,7 @@ export function DepositComparison({
           ...inputs,
           depositAmount,
           mortgageRate: rate,
+          availableCapital: pool,
         }
         const result = simulate(scenarioInputs)
         const final = result.years[result.years.length - 1]
@@ -96,7 +116,7 @@ export function DepositComparison({
           verdictDiff: final?.buyMinusRent ?? 0,
         }
       }),
-    [inputs, bestRate],
+    [inputs, bestRate, pool],
   )
 
   const winnerIdx = rows.reduce(
@@ -149,20 +169,6 @@ export function DepositComparison({
           >
             <X className="h-5 w-5" />
           </button>
-        </div>
-
-        <div className="rounded-md bg-amber-50/60 dark:bg-sky-950/40 border border-amber-200 dark:border-sky-900 px-4 py-3 mb-4">
-          <Field
-            label="Total cash to allocate"
-            prefix="£"
-            unit="optional"
-            hint="If you have a fixed pool (e.g. £200,000) and want to compare deposit sizes fairly, enter it here. Each row will hold the rent-path investment constant — so the comparison is 'what's the best split between deposit and investment?' rather than each row using a different starting capital. Leave at 0 to keep the original per-row K."
-            value={inputs.availableCapital}
-            onChange={onUpdateAvailableCapital}
-            min={0}
-            step={5000}
-            thousands
-          />
         </div>
 
         <div className="overflow-x-auto -mx-2">
