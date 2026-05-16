@@ -1,5 +1,6 @@
 import { Home, Key, TrendingUp, Wallet } from 'lucide-react'
 import type { Inputs } from '../finance/types'
+import { typicalRateForLtv } from '../finance/ltvRates'
 import { Field, ToggleField, Section } from './Field'
 
 type Props = {
@@ -18,6 +19,13 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
     inputs.housePrice > 0
       ? `${(depositPercent * 100).toFixed(1)}% of house price`
       : 'Set a house price first'
+
+  const ltv =
+    inputs.housePrice > 0
+      ? Math.max(0, 1 - inputs.depositAmount / inputs.housePrice)
+      : 1
+  const typicalRate = typicalRateForLtv(ltv)
+  const rateHint = `Typical at ~${(ltv * 100).toFixed(0)}% LTV: ${(typicalRate * 100).toFixed(1)}%`
 
   return (
     <div className="space-y-8">
@@ -42,6 +50,7 @@ export function InputForm({ inputs, onChange, fieldColumnsClass }: Props) {
         <Field
           label="Mortgage rate"
           unit="% per year"
+          hint={rateHint}
           value={inputs.mortgageRate}
           onChange={(v) => update('mortgageRate', v)}
           min={0}

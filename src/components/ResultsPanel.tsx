@@ -51,17 +51,14 @@ export function ResultsPanel({ inputs, result, horizonYears, theme }: Props) {
         <BreakEvenChart years={result.years} breakEvenYear={result.breakEvenYear} />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <MonthlyCostsCard inputs={inputs} monthlyMortgagePayment={result.monthlyMortgagePayment} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard label="Stamp duty" value={formatGBP(result.sdlt)} />
         <StatCard
           label="Total upfront buy cost"
           value={formatGBP(result.totalUpfrontBuyCost)}
           hint="Deposit + stamp duty + legal + mortgage fee"
-        />
-        <StatCard
-          label="Monthly mortgage payment"
-          value={formatGBP(result.monthlyMortgagePayment)}
-          hint="At the chosen rate"
         />
         {finalYear && (
           <StatCard
@@ -89,6 +86,85 @@ export function ResultsPanel({ inputs, result, horizonYears, theme }: Props) {
       )}
 
       <MonteCarloPanel inputs={inputs} />
+    </div>
+  )
+}
+
+function MonthlyCostsCard({
+  inputs,
+  monthlyMortgagePayment,
+}: {
+  inputs: Inputs
+  monthlyMortgagePayment: number
+}) {
+  const maintenance = (inputs.housePrice * inputs.maintenancePercent) / 12
+  const insurance = inputs.buildingsInsuranceAnnual / 12
+  const service = inputs.serviceChargeAnnual / 12
+  const buyTotal = monthlyMortgagePayment + maintenance + insurance + service
+  const rent = inputs.monthlyRent
+  const diff = buyTotal - rent
+  const pct = rent > 0 ? Math.abs(diff) / rent : 0
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h3 className="text-sm font-semibold text-slate-900 mb-4">
+        Year 1 monthly costs
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <p className="text-xs uppercase tracking-wide font-semibold text-emerald-700">
+            Buy
+          </p>
+          <p className="text-3xl font-bold tabular-nums text-slate-900 mt-1">
+            {formatGBP(buyTotal)}
+            <span className="text-sm font-normal text-slate-500"> / month</span>
+          </p>
+          <dl className="mt-3 space-y-1 text-sm">
+            <Row label="Mortgage (P&I)" value={formatGBP(monthlyMortgagePayment)} />
+            <Row label="Maintenance" value={formatGBP(maintenance)} />
+            <Row label="Insurance" value={formatGBP(insurance)} />
+            {service > 0 && <Row label="Service & ground rent" value={formatGBP(service)} />}
+          </dl>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-wide font-semibold text-amber-700">
+            Rent
+          </p>
+          <p className="text-3xl font-bold tabular-nums text-slate-900 mt-1">
+            {formatGBP(rent)}
+            <span className="text-sm font-normal text-slate-500"> / month</span>
+          </p>
+          <p className="text-xs text-slate-500 mt-3">
+            Single line item — landlord covers maintenance & buildings insurance.
+          </p>
+        </div>
+      </div>
+      <p className="mt-4 pt-4 border-t border-slate-200 text-sm text-slate-700">
+        {diff > 0 ? (
+          <>
+            Buying costs{' '}
+            <span className="font-semibold tabular-nums">{formatGBP(diff)}/month</span>{' '}
+            more than renting ({(pct * 100).toFixed(0)}% more).
+          </>
+        ) : diff < 0 ? (
+          <>
+            Renting costs{' '}
+            <span className="font-semibold tabular-nums">{formatGBP(-diff)}/month</span>{' '}
+            more than buying ({(pct * 100).toFixed(0)}% more).
+          </>
+        ) : (
+          <>Buy and rent monthly costs are equal in year 1.</>
+        )}
+      </p>
+    </div>
+  )
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between">
+      <dt className="text-slate-600">{label}</dt>
+      <dd className="tabular-nums text-slate-900">{value}</dd>
     </div>
   )
 }
