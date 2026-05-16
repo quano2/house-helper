@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Home, Key, TrendingUp, Wallet } from 'lucide-react'
+import { Home, Key, Scale, TrendingUp, Wallet } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { formatGBP } from '../utils/format'
+import { DepositComparison } from './DepositComparison'
 import { Field, ToggleField, Section } from './Field'
 
 type Props = {
@@ -16,14 +17,41 @@ export function InputForm({ inputs, onChange }: Props) {
     onChange({ ...inputs, [key]: value })
 
   const [depositMode, setDepositMode] = useState<DepositMode>('amount')
+  const [comparisonOpen, setComparisonOpen] = useState(false)
 
   const depositPercent =
     inputs.housePrice > 0 ? inputs.depositAmount / inputs.housePrice : 0
-  const depositPercentHint =
+  const baseDepositPercentText =
     inputs.housePrice > 0
       ? `${(depositPercent * 100).toFixed(1)}% of house price`
       : 'Set a house price first'
-  const depositAmountHint = `= ${formatGBP(inputs.depositAmount)}`
+  const baseDepositAmountText = `= ${formatGBP(inputs.depositAmount)}`
+
+  const compareLink = (
+    <button
+      type="button"
+      onClick={() => setComparisonOpen(true)}
+      className="inline-flex items-center gap-1 text-orange-700 dark:text-sky-400 hover:underline"
+    >
+      <Scale className="h-3 w-3" />
+      Compare options
+    </button>
+  )
+
+  const depositPercentHint = (
+    <span className="flex flex-wrap items-center gap-x-2">
+      <span>{baseDepositPercentText}</span>
+      <span className="text-stone-400 dark:text-slate-600">·</span>
+      {compareLink}
+    </span>
+  )
+  const depositAmountHint = (
+    <span className="flex flex-wrap items-center gap-x-2">
+      <span>{baseDepositAmountText}</span>
+      <span className="text-stone-400 dark:text-slate-600">·</span>
+      {compareLink}
+    </span>
+  )
 
   const depositUnitToggle = (
     <div className="inline-flex items-center bg-stone-100 dark:bg-slate-800 rounded p-0.5 text-xs">
@@ -56,6 +84,14 @@ export function InputForm({ inputs, onChange }: Props) {
 
   return (
     <div className="space-y-8">
+      <DepositComparison
+        open={comparisonOpen}
+        inputs={inputs}
+        onApply={(depositAmount, mortgageRate) =>
+          onChange({ ...inputs, depositAmount, mortgageRate })
+        }
+        onClose={() => setComparisonOpen(false)}
+      />
       <Section title="The purchase" icon={Home}>
         <Field
           label="House price"

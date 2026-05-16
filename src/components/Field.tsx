@@ -3,7 +3,7 @@ import type { LucideIcon } from 'lucide-react'
 
 type Props = {
   label: string
-  hint?: string
+  hint?: ReactNode
   unit?: ReactNode
   value: number
   onChange: (v: number) => void
