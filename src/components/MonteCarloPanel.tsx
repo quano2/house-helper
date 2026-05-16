@@ -49,6 +49,10 @@ export function MonteCarloPanel({ inputs }: Props) {
           : pBuy >= 0.3
             ? 'Renting is the better bet'
             : 'Renting looks robust'
+  // Tint the headline percentage by which side is winning, so it visually
+  // agrees with the verdict card above.
+  const statAccentClass =
+    pBuy >= 0.5 ? 'text-emerald-700' : 'text-amber-800'
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -73,7 +77,7 @@ export function MonteCarloPanel({ inputs }: Props) {
           <p className="text-xs uppercase tracking-wide font-semibold text-stone-600">
             Buy wins in
           </p>
-          <p className="text-4xl font-bold text-orange-700">
+          <p className={`text-4xl font-bold tabular-nums ${statAccentClass}`}>
             {formatPercent(pBuy)}
           </p>
           <p className="text-xs text-stone-600 mt-1">of futures</p>

@@ -31,14 +31,11 @@ export function ResultsPanel({ inputs, result, horizonYears, theme }: Props) {
             <p className={`text-xs uppercase tracking-wide font-semibold ${verdictAccent}`}>
               Verdict at year {horizonYears}
             </p>
-            <p className="mt-1 text-2xl font-semibold text-slate-900">
-              {buyWins ? 'Buying wins' : 'Renting wins'}
+            <p className="mt-2 text-lg text-slate-700">
+              {buyWins ? 'Buying wins by' : 'Renting wins by'}
             </p>
-            <p className="mt-1 text-4xl font-bold tracking-tight text-slate-900">
-              by{' '}
-              <span className={verdictAccent}>
-                {finalYear ? formatGBP(Math.abs(finalYear.buyMinusRent)) : '—'}
-              </span>
+            <p className={`mt-0.5 text-5xl font-bold tracking-tight tabular-nums ${verdictAccent}`}>
+              {finalYear ? formatGBP(Math.abs(finalYear.buyMinusRent)) : '—'}
             </p>
             <p className="mt-3 text-sm text-slate-700">
               {result.breakEvenYear !== null
@@ -116,7 +113,7 @@ function StatCard({
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
       <p className="text-xs uppercase tracking-wide text-slate-500">{label}</p>
-      <p className={`mt-1 text-2xl font-semibold ${valueColor}`}>{value}</p>
+      <p className={`mt-1 text-2xl font-semibold tabular-nums ${valueColor}`}>{value}</p>
       {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
     </div>
   )
