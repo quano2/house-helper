@@ -28,7 +28,8 @@ export function Field({
   step,
   asPercent,
 }: Props) {
-  const displayValue = asPercent ? value * 100 : value
+  // Round display value to avoid float artefacts (e.g. 0.07 * 100 → 7.0000000001)
+  const displayValue = asPercent ? Number((value * 100).toFixed(4)) : value
   const displayStep = step ?? (asPercent ? 0.1 : 1)
 
   return (

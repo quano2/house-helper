@@ -26,7 +26,6 @@ export const defaultInputs: Inputs = {
   houseAppreciationAnnual: 0.03,
   rentInflationAnnual: 0.03,
   investmentReturnAnnual: 0.07,
-  generalInflationAnnual: 0.025,
 
   yearsToSimulate: 25,
 }

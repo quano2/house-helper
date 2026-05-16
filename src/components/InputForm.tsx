@@ -33,6 +33,7 @@ export function InputForm({ inputs, onChange }: Props) {
         <Field
           label="Mortgage rate"
           unit="% per year"
+          hint="Held flat for the full term. UK fixes are 2–5y then remortgage — this model ignores that."
           value={inputs.mortgageRate}
           onChange={(v) => update('mortgageRate', v)}
           min={0}
@@ -53,8 +54,8 @@ export function InputForm({ inputs, onChange }: Props) {
           onChange={(v) => update('firstTimeBuyer', v)}
         />
         <ToggleField
-          label="Additional property"
-          hint="Adds the 5% HRAD surcharge"
+          label="Second home / buy-to-let"
+          hint="Adds 5% to stamp duty on the whole price"
           value={inputs.additionalProperty}
           onChange={(v) => update('additionalProperty', v)}
         />
@@ -148,14 +149,6 @@ export function InputForm({ inputs, onChange }: Props) {
           hint="Stocks long-run: ~7% nominal. Assumes ISA-sheltered."
           value={inputs.investmentReturnAnnual}
           onChange={(v) => update('investmentReturnAnnual', v)}
-          min={0}
-          asPercent
-        />
-        <Field
-          label="General inflation"
-          unit="% per year"
-          value={inputs.generalInflationAnnual}
-          onChange={(v) => update('generalInflationAnnual', v)}
           min={0}
           asPercent
         />

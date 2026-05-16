@@ -31,7 +31,6 @@ export function simulate(inputs: Inputs): SimulationResult {
     houseAppreciationAnnual,
     rentInflationAnnual,
     investmentReturnAnnual,
-    generalInflationAnnual,
     yearsToSimulate,
   } = inputs
 
@@ -50,13 +49,11 @@ export function simulate(inputs: Inputs): SimulationResult {
   const monthlyAppreciation = Math.pow(1 + houseAppreciationAnnual, 1 / 12) - 1
   const monthlyInvestmentReturn =
     Math.pow(1 + investmentReturnAnnual, 1 / 12) - 1
-  const monthlyInflation = Math.pow(1 + generalInflationAnnual, 1 / 12) - 1
-  // Rent and inflation-linked costs step up once per year for realism.
 
   let houseValue = housePrice
   let rent = monthlyRent
-  let insurance = buildingsInsuranceAnnual
-  let serviceCharge = serviceChargeAnnual
+  const insurance = buildingsInsuranceAnnual
+  const serviceCharge = serviceChargeAnnual
 
   // Cash positions
   let buyCash = 0
@@ -129,11 +126,9 @@ export function simulate(inputs: Inputs): SimulationResult {
 
       buyAnnualOutflowAccum = 0
       rentAnnualOutflowAccum = 0
-      // Annual step-ups
+      // Annual step-up — rent only. Insurance and service charges held flat
+      // for simplicity (their growth is third-order noise vs the big levers).
       rent *= 1 + rentInflationAnnual
-      insurance *= 1 + generalInflationAnnual
-      serviceCharge *= 1 + generalInflationAnnual
-      void monthlyInflation // (reserved for future use — silence unused warning)
     }
   }
 

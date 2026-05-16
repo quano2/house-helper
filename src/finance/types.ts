@@ -26,7 +26,6 @@ export type Inputs = {
   houseAppreciationAnnual: number
   rentInflationAnnual: number
   investmentReturnAnnual: number
-  generalInflationAnnual: number
 
   // Horizon
   yearsToSimulate: number
