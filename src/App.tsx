@@ -14,7 +14,7 @@ function App() {
         <div className="mx-auto max-w-6xl px-6 py-8">
           <h1 className="text-3xl font-semibold tracking-tight">House Helper</h1>
           <p className="mt-2 text-sm text-indigo-100">
-            UK buy-vs-rent calculator for owner-occupiers. All numbers editable. Tax model: April 2025 SDLT.
+            UK buy-vs-rent calculator for owner-occupiers. All numbers editable. Stamp duty rates: April 2025.
           </p>
         </div>
       </header>
@@ -32,8 +32,8 @@ function App() {
         <footer className="mt-16 border-t border-slate-200 pt-6 text-xs text-slate-500">
           <p>
             This is a model, not advice. Tax rules and market rates change — verify
-            anything load-bearing. SDLT covers England &amp; Northern Ireland only
-            (Scotland LBTT and Wales LTT differ).
+            anything load-bearing. Stamp duty covers England &amp; Northern Ireland only
+            (Scotland and Wales have their own equivalents).
           </p>
         </footer>
       </main>

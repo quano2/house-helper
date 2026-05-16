@@ -48,7 +48,7 @@ export function InputForm({ inputs, onChange }: Props) {
         />
         <ToggleField
           label="First-time buyer"
-          hint="Reduces SDLT for purchases ≤ £500k"
+          hint="Reduces stamp duty for purchases ≤ £500k"
           value={inputs.firstTimeBuyer}
           onChange={(v) => update('firstTimeBuyer', v)}
         />

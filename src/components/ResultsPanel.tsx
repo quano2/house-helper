@@ -41,7 +41,7 @@ export function ResultsPanel({ result, horizonYears }: Props) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <StatCard label="Stamp Duty (SDLT)" value={formatGBP(result.sdlt)} />
+        <StatCard label="Stamp duty" value={formatGBP(result.sdlt)} />
         <StatCard
           label="Total upfront buy cost"
           value={formatGBP(result.totalUpfrontBuyCost)}
