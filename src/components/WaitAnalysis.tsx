@@ -17,14 +17,12 @@ export function WaitAnalysis({ inputs }: Props) {
         const result = simulateWithDelay(inputs, wait)
         const final = result.years[result.years.length - 1]
         // House price at the moment of purchase (current × growth^wait years).
-        // Don't use final.houseValue — that's the year-N value (much higher).
         const purchaseTimePrice =
           inputs.housePrice * Math.pow(1 + inputs.houseAppreciationAnnual, wait)
         return {
           wait,
-          buyNW: final?.buyNetWorth ?? 0,
-          rentNW: final?.rentNetWorth ?? 0,
           diff: final?.buyMinusRent ?? 0,
+          breakEvenYear: result.breakEvenYear,
           purchaseTimePrice,
         }
       }),
@@ -63,9 +61,8 @@ export function WaitAnalysis({ inputs }: Props) {
             <tr className="text-xs uppercase tracking-wide text-stone-500 dark:text-slate-400">
               <th className="text-left px-2 py-2 font-semibold">Wait</th>
               <th className="text-right px-2 py-2 font-semibold">House price then</th>
-              <th className="text-right px-2 py-2 font-semibold">Buy NW at year {inputs.yearsToSimulate}</th>
-              <th className="text-right px-2 py-2 font-semibold">Rent NW at year {inputs.yearsToSimulate}</th>
-              <th className="text-right px-2 py-2 font-semibold">Buy − Rent</th>
+              <th className="text-right px-2 py-2 font-semibold">Break-even</th>
+              <th className="text-right px-2 py-2 font-semibold">Buy − Rent at year {inputs.yearsToSimulate}</th>
             </tr>
           </thead>
           <tbody>
@@ -92,10 +89,7 @@ export function WaitAnalysis({ inputs }: Props) {
                     {formatGBP(r.purchaseTimePrice)}
                   </td>
                   <td className="px-2 py-2 text-right tabular-nums text-stone-700 dark:text-slate-300">
-                    {formatGBP(r.buyNW)}
-                  </td>
-                  <td className="px-2 py-2 text-right tabular-nums text-stone-700 dark:text-slate-300">
-                    {formatGBP(r.rentNW)}
+                    {r.breakEvenYear !== null ? `Year ${r.breakEvenYear}` : '—'}
                   </td>
                   <td className={`px-2 py-2 text-right tabular-nums font-semibold ${diffClass}`}>
                     {diffText}
@@ -114,6 +108,9 @@ export function WaitAnalysis({ inputs }: Props) {
       </p>
       <p className="mt-1 text-xs text-stone-500 dark:text-slate-400 leading-relaxed">
         To model "rates drop after I wait", lower the mortgage rate input and re-read. The wait rows then reflect buying at that lower rate after the wait period. The model assumes the rate input applies at purchase time — not historical.
+      </p>
+      <p className="mt-1 text-xs text-stone-500 dark:text-slate-400 leading-relaxed">
+        Absolute net worth values aren't shown because they'd exclude your monthly savings (the model doesn't have a salary/savings input), making them systematically low. The Buy − Rent comparison is unaffected since monthly savings would apply equally to both paths.
       </p>
     </div>
   )
