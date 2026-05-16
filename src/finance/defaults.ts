@@ -10,7 +10,6 @@ export const defaultInputs: Inputs = {
   mortgageRate: 0.045,
   mortgageTermYears: 25,
   firstTimeBuyer: false,
-  additionalProperty: false,
 
   legalAndSurveyFees: 2000,
   mortgageArrangementFee: 999,

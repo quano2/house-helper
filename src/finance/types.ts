@@ -5,7 +5,6 @@ export type Inputs = {
   mortgageRate: number // annual, 0..1 (e.g. 0.045)
   mortgageTermYears: number
   firstTimeBuyer: boolean
-  additionalProperty: boolean
 
   // Other upfront buying costs (flat £)
   legalAndSurveyFees: number

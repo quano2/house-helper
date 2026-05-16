@@ -10,11 +10,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-6 py-6">
-          <h1 className="text-2xl font-semibold tracking-tight">House Helper</h1>
-          <p className="mt-1 text-sm text-slate-600">
-            UK buy-vs-rent calculator. All numbers editable. Tax model: April 2025 SDLT.
+      <header className="bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-sm">
+        <div className="mx-auto max-w-6xl px-6 py-8">
+          <h1 className="text-3xl font-semibold tracking-tight">House Helper</h1>
+          <p className="mt-2 text-sm text-indigo-100">
+            UK buy-vs-rent calculator for owner-occupiers. All numbers editable. Tax model: April 2025 SDLT.
           </p>
         </div>
       </header>

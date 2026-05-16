@@ -11,17 +11,24 @@ export function ResultsPanel({ result, horizonYears }: Props) {
   const finalYear = result.years[result.years.length - 1]
   const buyWins = finalYear ? finalYear.buyMinusRent >= 0 : false
 
+  const verdictClasses = buyWins
+    ? 'border-emerald-300 bg-gradient-to-br from-emerald-50 to-emerald-100'
+    : 'border-rose-300 bg-gradient-to-br from-rose-50 to-rose-100'
+  const verdictAccent = buyWins ? 'text-emerald-700' : 'text-rose-700'
+
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-        <p className="text-xs uppercase tracking-wide text-slate-500">Verdict at year {horizonYears}</p>
+      <div className={`rounded-xl border-2 p-6 shadow-sm ${verdictClasses}`}>
+        <p className={`text-xs uppercase tracking-wide font-semibold ${verdictAccent}`}>
+          Verdict at year {horizonYears}
+        </p>
         <p className="mt-2 text-3xl font-semibold text-slate-900">
           {buyWins ? 'Buying wins' : 'Renting wins'} by{' '}
-          <span className={buyWins ? 'text-emerald-600' : 'text-rose-600'}>
+          <span className={verdictAccent}>
             {finalYear ? formatGBP(Math.abs(finalYear.buyMinusRent)) : '—'}
           </span>
         </p>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-slate-700">
           {result.breakEvenYear !== null
             ? `Buying overtakes renting in year ${result.breakEvenYear}.`
             : 'Buying never overtakes renting within this horizon.'}

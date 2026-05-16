@@ -20,7 +20,6 @@ export function simulate(inputs: Inputs): SimulationResult {
     mortgageRate,
     mortgageTermYears,
     firstTimeBuyer,
-    additionalProperty,
     legalAndSurveyFees,
     mortgageArrangementFee,
     maintenancePercent,
@@ -34,7 +33,7 @@ export function simulate(inputs: Inputs): SimulationResult {
     yearsToSimulate,
   } = inputs
 
-  const sdlt = calculateSdlt(housePrice, { firstTimeBuyer, additionalProperty })
+  const sdlt = calculateSdlt(housePrice, { firstTimeBuyer })
   const deposit = housePrice * depositPercent
   const loanAmount = housePrice - deposit
   const totalUpfrontBuyCost =

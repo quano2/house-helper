@@ -53,12 +53,6 @@ export function InputForm({ inputs, onChange }: Props) {
           value={inputs.firstTimeBuyer}
           onChange={(v) => update('firstTimeBuyer', v)}
         />
-        <ToggleField
-          label="Second home / buy-to-let"
-          hint="Adds 5% to stamp duty on the whole price"
-          value={inputs.additionalProperty}
-          onChange={(v) => update('additionalProperty', v)}
-        />
       </Section>
 
       <Section title="Buying — other costs">
