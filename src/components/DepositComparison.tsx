@@ -15,6 +15,11 @@ type Props = {
  * currently have at their current LTV, then each row computes
  * best_rate + that tier's spread. The relative spread between tiers
  * is much more stable over time than the absolute level.
+ *
+ * Calibrated against best-buy data from HomeOwners Alliance, 16 May 2026:
+ *   60% LTV 4.48%, 75% LTV 4.57%, 85% LTV 4.75%, 95% LTV 5.20%.
+ * 80% and 90% interpolated/smoothed (a Nationwide promo currently makes
+ * 90% briefly cheaper than 85% — treat that as an outlier, not the rule).
  */
 type LtvBand = {
   ltv: number // 0..1 (loan / house value)
@@ -24,11 +29,11 @@ type LtvBand = {
 
 const LTV_BANDS: LtvBand[] = [
   { ltv: 0.60, depositPercent: 0.40, spreadAboveBest: 0.0 },
-  { ltv: 0.75, depositPercent: 0.25, spreadAboveBest: 0.001 },
-  { ltv: 0.80, depositPercent: 0.20, spreadAboveBest: 0.002 },
-  { ltv: 0.85, depositPercent: 0.15, spreadAboveBest: 0.003 },
-  { ltv: 0.90, depositPercent: 0.10, spreadAboveBest: 0.005 },
-  { ltv: 0.95, depositPercent: 0.05, spreadAboveBest: 0.009 },
+  { ltv: 0.75, depositPercent: 0.25, spreadAboveBest: 0.0009 },
+  { ltv: 0.80, depositPercent: 0.20, spreadAboveBest: 0.0018 },
+  { ltv: 0.85, depositPercent: 0.15, spreadAboveBest: 0.0027 },
+  { ltv: 0.90, depositPercent: 0.10, spreadAboveBest: 0.0045 },
+  { ltv: 0.95, depositPercent: 0.05, spreadAboveBest: 0.0072 },
 ]
 
 function spreadForLtv(ltv: number): number {
@@ -177,7 +182,7 @@ export function DepositComparison({ inputs, onApply }: Props) {
         <span className="font-semibold text-stone-700 dark:text-slate-300">Highlighted row</span> = best Buy − Rent outcome in this set. Other inputs (rent, horizon, house price, market assumptions) come from your current scenario.
       </p>
       <p className="mt-1 text-xs text-stone-500 dark:text-slate-400 leading-relaxed">
-        LTV rate spreads are approximate (~0.1%/0.2%/0.5%/0.9% above the 60% LTV rate at 25/15/10/5% deposit). Actual lender offers vary.
+        LTV spreads calibrated to UK best-buy data (May 2026): ~+0.09% / +0.27% / +0.45% / +0.72% above the 60% LTV rate at 25 / 15 / 10 / 5% deposit. Individual lender offers vary.
       </p>
 
       <div className="mt-4 pt-4 border-t border-stone-200 dark:border-slate-700">
