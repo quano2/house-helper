@@ -31,6 +31,11 @@ type LtvBand = {
 }
 
 const LTV_BANDS: LtvBand[] = [
+  // Above 40% deposit, the rate stops improving (≤60% LTV is the best tier).
+  // 100% = cash buyer, no mortgage, rate doesn't apply.
+  { ltv: 0.0, depositPercent: 1.0, spreadAboveBest: 0.0 },
+  { ltv: 0.2, depositPercent: 0.8, spreadAboveBest: 0.0 },
+  { ltv: 0.4, depositPercent: 0.6, spreadAboveBest: 0.0 },
   { ltv: 0.6, depositPercent: 0.4, spreadAboveBest: 0.0 },
   { ltv: 0.75, depositPercent: 0.25, spreadAboveBest: 0.0009 },
   { ltv: 0.8, depositPercent: 0.2, spreadAboveBest: 0.0018 },
@@ -209,10 +214,10 @@ export function DepositComparison({
                       </span>
                     </td>
                     <td className="px-2 py-2 text-right tabular-nums text-stone-700 dark:text-slate-300">
-                      {(r.rate * 100).toFixed(2)}%
+                      {r.depositPercent >= 1.0 ? '—' : `${(r.rate * 100).toFixed(2)}%`}
                     </td>
                     <td className="px-2 py-2 text-right tabular-nums text-stone-700 dark:text-slate-300">
-                      {formatGBP(r.monthly)}
+                      {r.depositPercent >= 1.0 ? '—' : formatGBP(r.monthly)}
                     </td>
                     <td className={`px-2 py-2 text-right tabular-nums font-semibold ${diffClass}`}>
                       {diffText}
@@ -246,7 +251,7 @@ export function DepositComparison({
           <span className="font-semibold text-stone-700 dark:text-slate-300">Highlighted row</span> = best Buy − Rent outcome in this set. Other inputs (rent, horizon, house price, market assumptions) come from your current scenario.
         </p>
         <p className="mt-1 text-xs text-stone-500 dark:text-slate-400 leading-relaxed">
-          LTV spreads calibrated to UK best-buy data (May 2026): ~+0.09% / +0.27% / +0.45% / +0.72% above the 60% LTV rate at 25 / 15 / 10 / 5% deposit. Individual lender offers vary.
+          LTV spreads calibrated to UK best-buy data (May 2026): ~+0.09% / +0.27% / +0.45% / +0.72% above the 60% LTV rate at 25 / 15 / 10 / 5% deposit. Above 40% deposit, the rate stops improving. 100% deposit = cash buyer (no mortgage).
         </p>
 
         <div className="mt-4 pt-4 border-t border-stone-200 dark:border-slate-700">
