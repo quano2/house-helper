@@ -36,21 +36,21 @@ export function SavedScenarios({ current, onLoad }: Props) {
   }
 
   return (
-    <div className="rounded-lg border border-amber-200 bg-white p-3 mb-8 print:hidden">
+    <div className="rounded-lg border border-amber-200 dark:border-stone-700 bg-white dark:bg-stone-900 p-3 mb-8 print:hidden">
       {scenarios.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="text-xs uppercase tracking-wide font-semibold text-stone-600 mr-1">
+          <span className="text-xs uppercase tracking-wide font-semibold text-stone-600 dark:text-stone-400 mr-1">
             Saved:
           </span>
           {scenarios.map((s) => (
             <span
               key={s.id}
-              className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 rounded-full pl-3 pr-1 py-1"
+              className="inline-flex items-center gap-1 bg-amber-50 dark:bg-stone-800 border border-amber-200 dark:border-stone-700 rounded-full pl-3 pr-1 py-1"
             >
               <button
                 type="button"
                 onClick={() => onLoad(s.inputs)}
-                className="text-sm text-stone-800 hover:text-orange-700"
+                className="text-sm text-stone-800 dark:text-stone-200 hover:text-orange-700 dark:hover:text-orange-400"
                 title="Load this scenario"
               >
                 {s.name}
@@ -58,7 +58,7 @@ export function SavedScenarios({ current, onLoad }: Props) {
               <button
                 type="button"
                 onClick={() => remove(s.id)}
-                className="text-stone-400 hover:text-stone-700 p-0.5"
+                className="text-stone-400 dark:text-stone-500 hover:text-stone-700 dark:hover:text-stone-300 p-0.5"
                 aria-label={`Delete ${s.name}`}
                 title="Delete"
               >
@@ -85,7 +85,7 @@ export function SavedScenarios({ current, onLoad }: Props) {
               ? 'Save current setup — e.g. "My current best guess"'
               : 'Save current as…'
           }
-          className="flex-1 text-sm rounded-md border border-stone-300 px-3 py-1.5 bg-white focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+          className="flex-1 text-sm rounded-md border border-stone-300 dark:border-stone-700 px-3 py-1.5 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 dark:placeholder:text-stone-500"
         />
         <button
           type="submit"

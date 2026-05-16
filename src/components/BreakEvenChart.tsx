@@ -15,17 +15,28 @@ import { formatGBP, formatGBPCompact } from '../utils/format'
 type Props = {
   years: YearResult[]
   breakEvenYear: number | null
+  isDark?: boolean
 }
 
-const BUY_COLOUR = '#15803d' // emerald-700
-const RENT_COLOUR = '#b45309' // amber-700 — matches warm theme
+const BUY_LIGHT = '#15803d' // emerald-700
+const BUY_DARK = '#34d399' // emerald-400
+const RENT_LIGHT = '#b45309' // amber-700
+const RENT_DARK = '#fbbf24' // amber-400
 
-export function BreakEvenChart({ years, breakEvenYear }: Props) {
+export function BreakEvenChart({ years, breakEvenYear, isDark = false }: Props) {
   const data = years.map((y) => ({
     year: y.year,
     buy: Math.round(y.buyNetWorth),
     rent: Math.round(y.rentNetWorth),
   }))
+
+  const buyColour = isDark ? BUY_DARK : BUY_LIGHT
+  const rentColour = isDark ? RENT_DARK : RENT_LIGHT
+  const gridStroke = isDark ? '#44403c' : '#e7e5e4'
+  const axisStroke = isDark ? '#a8a29e' : '#78716c'
+  const tooltipBg = isDark ? '#1c1917' : '#ffffff'
+  const tooltipBorder = isDark ? '#44403c' : '#e7e5e4'
+  const tooltipText = isDark ? '#f5f5f4' : '#1c1917'
 
   return (
     <div className="h-80 w-full">
@@ -33,22 +44,24 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
         <ComposedChart data={data} margin={{ top: 20, right: 16, left: 8, bottom: 24 }}>
           <defs>
             <linearGradient id="buyGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={BUY_COLOUR} stopOpacity={0.35} />
-              <stop offset="100%" stopColor={BUY_COLOUR} stopOpacity={0} />
+              <stop offset="0%" stopColor={buyColour} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={buyColour} stopOpacity={0} />
             </linearGradient>
             <linearGradient id="rentGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={RENT_COLOUR} stopOpacity={0.25} />
-              <stop offset="100%" stopColor={RENT_COLOUR} stopOpacity={0} />
+              <stop offset="0%" stopColor={rentColour} stopOpacity={0.25} />
+              <stop offset="100%" stopColor={rentColour} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
           <XAxis
             dataKey="year"
-            stroke="#78716c"
-            label={{ value: 'Year', position: 'insideBottom', offset: -10, fill: '#78716c' }}
+            stroke={axisStroke}
+            tick={{ fill: axisStroke }}
+            label={{ value: 'Year', position: 'insideBottom', offset: -10, fill: axisStroke }}
           />
           <YAxis
-            stroke="#78716c"
+            stroke={axisStroke}
+            tick={{ fill: axisStroke }}
             tickFormatter={(v: number) => formatGBPCompact(v)}
             width={80}
           />
@@ -57,20 +70,24 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
             labelFormatter={(label) => `Year ${label}`}
             contentStyle={{
               borderRadius: 8,
-              border: '1px solid #e7e5e4',
+              border: `1px solid ${tooltipBorder}`,
+              background: tooltipBg,
+              color: tooltipText,
               fontSize: 13,
             }}
+            labelStyle={{ color: tooltipText }}
+            itemStyle={{ color: tooltipText }}
           />
-          <Legend wrapperStyle={{ paddingTop: 12 }} />
+          <Legend wrapperStyle={{ paddingTop: 12, color: axisStroke }} />
           {breakEvenYear !== null && (
             <ReferenceLine
               x={breakEvenYear}
-              stroke="#78716c"
+              stroke={axisStroke}
               strokeDasharray="4 4"
               label={{
                 value: `Break-even (year ${breakEvenYear})`,
                 position: 'insideTop',
-                fill: '#44403c',
+                fill: axisStroke,
                 fontSize: 12,
                 offset: 8,
               }}
@@ -80,7 +97,7 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
             type="monotone"
             dataKey="buy"
             name="Buy"
-            stroke={BUY_COLOUR}
+            stroke={buyColour}
             strokeWidth={2.5}
             fill="url(#buyGradient)"
           />
@@ -88,7 +105,7 @@ export function BreakEvenChart({ years, breakEvenYear }: Props) {
             type="monotone"
             dataKey="rent"
             name="Rent"
-            stroke={RENT_COLOUR}
+            stroke={rentColour}
             strokeWidth={2.5}
             fill="url(#rentGradient)"
           />

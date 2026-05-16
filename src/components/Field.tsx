@@ -29,14 +29,9 @@ export function Field({
   step,
   asPercent,
 }: Props) {
-  // Round display value to avoid float artefacts (e.g. 0.07 * 100 → 7.0000000001)
   const displayValue = asPercent ? Number((value * 100).toFixed(4)) : value
   const displayStep = step ?? (asPercent ? 0.1 : 1)
 
-  // Hold the visible text locally so the user can freely clear, partially edit,
-  // or type things like "5." without React snapping the field back. Commit a
-  // number to parent state only when the text parses cleanly; on blur, fall
-  // back to the last committed value if the text was left empty/invalid.
   const [text, setText] = useState(String(displayValue))
   const [focused, setFocused] = useState(false)
 
@@ -47,12 +42,12 @@ export function Field({
   return (
     <label className="block">
       <div className="flex items-baseline justify-between">
-        <span className="text-sm font-medium text-slate-700">{label}</span>
-        {unit && <span className="text-xs text-slate-500">{unit}</span>}
+        <span className="text-sm font-medium text-stone-700 dark:text-stone-300">{label}</span>
+        {unit && <span className="text-xs text-stone-500 dark:text-stone-500">{unit}</span>}
       </div>
       <input
         type="number"
-        className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm tabular-nums focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
+        className="mt-1 w-full rounded-md border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-100 px-3 py-2 text-sm tabular-nums focus:border-orange-500 dark:focus:border-orange-400 focus:outline-none focus:ring-1 focus:ring-orange-500 dark:focus:ring-orange-400"
         value={text}
         min={min}
         max={max}
@@ -74,7 +69,7 @@ export function Field({
           }
         }}
       />
-      {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-stone-500 dark:text-stone-400">{hint}</p>}
     </label>
   )
 }
@@ -94,13 +89,13 @@ export function ToggleField({
     <label className="flex items-start gap-3 cursor-pointer">
       <input
         type="checkbox"
-        className="mt-1 h-4 w-4 rounded border-slate-300 text-orange-600 focus:ring-orange-500"
+        className="mt-1 h-4 w-4 rounded border-stone-300 dark:border-stone-600 dark:bg-stone-800 text-orange-600 focus:ring-orange-500"
         checked={value}
         onChange={(e) => onChange(e.target.checked)}
       />
       <span>
-        <span className="block text-sm font-medium text-slate-700">{label}</span>
-        {hint && <span className="block text-xs text-slate-500">{hint}</span>}
+        <span className="block text-sm font-medium text-stone-700 dark:text-stone-300">{label}</span>
+        {hint && <span className="block text-xs text-stone-500 dark:text-stone-400">{hint}</span>}
       </span>
     </label>
   )
@@ -117,8 +112,8 @@ export function Section({
 }) {
   return (
     <section className="space-y-4">
-      <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900 border-b border-slate-200 pb-1">
-        {Icon && <Icon className="h-4 w-4 text-orange-600" aria-hidden="true" />}
+      <h3 className="flex items-center gap-2 text-base font-semibold text-stone-900 dark:text-stone-100 border-b border-stone-200 dark:border-stone-700 pb-1">
+        {Icon && <Icon className="h-4 w-4 text-orange-600 dark:text-orange-400" aria-hidden="true" />}
         {title}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
