@@ -23,6 +23,7 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
   const {
     housePrice,
     depositAmount,
+    availableCapital,
     mortgageRate,
     mortgageTermYears,
     firstTimeBuyer,
@@ -58,8 +59,16 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
   const insurance = buildingsInsuranceAnnual
   const serviceCharge = serviceChargeAnnual
 
-  let buyCash = 0
-  let rentCash = totalUpfrontBuyCost
+  // Both paths start with the same "starting capital". If the user has set
+  // availableCapital above the upfront buy cost, the surplus gets invested in
+  // both paths from day 1 — so comparing different deposit sizes within a
+  // fixed cash pool works correctly (the "cash not put down" doesn't vanish
+  // from the rent-path investments).
+  const startingCapital = Math.max(totalUpfrontBuyCost, availableCapital)
+  const surplus = startingCapital - totalUpfrontBuyCost
+
+  let buyCash = surplus
+  let rentCash = startingCapital
 
   const years: YearResult[] = []
   const totalMonths = yearsToSimulate * 12

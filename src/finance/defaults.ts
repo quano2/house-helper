@@ -7,6 +7,9 @@ import type { Inputs } from './types'
 export const defaultInputs: Inputs = {
   housePrice: 350_000,
   depositAmount: 52_500, // 15% of the default house price
+  // 0 = use upfront buy cost as the rent-path capital (the original behaviour).
+  // Set above the upfront cost to also invest the surplus in both paths.
+  availableCapital: 0,
   // Calibrated against real broker quotes ~May 2026 (4.70% at 25% deposit,
   // 4.80% at 15% deposit). Revisit if the BoE base rate moves much.
   mortgageRate: 0.048,

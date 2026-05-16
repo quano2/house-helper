@@ -131,6 +131,17 @@ export function InputForm({ inputs, onChange }: Props) {
           />
         )}
         <Field
+          label="Available cash"
+          prefix="£"
+          unit="optional"
+          hint="Total cash on hand. If above the upfront buy cost, the surplus is invested in both paths — useful for comparing deposit sizes within a fixed pool. Leave at 0 to ignore."
+          value={inputs.availableCapital}
+          onChange={(v) => update('availableCapital', v)}
+          min={0}
+          step={5000}
+          thousands
+        />
+        <Field
           label="Mortgage rate"
           prefix="%"
           unit="per year"

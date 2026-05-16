@@ -48,10 +48,12 @@ export function AssumptionsModal({ open, onClose }: Props) {
         <div className="space-y-4 text-sm text-stone-700 dark:text-slate-300 leading-relaxed">
           <p>
             <strong className="text-stone-900 dark:text-slate-100">Invest the difference.</strong>{' '}
-            Both paths start with the same capital (deposit + stamp duty + legal +
-            mortgage fee). The buy path spends it; the rent path keeps it
-            invested. Each month, the cheaper path invests the saving. The verdict
-            only matches reality if you actually do this every month.
+            Both paths start with the same capital — either the upfront buy cost
+            (deposit + stamp duty + legal + mortgage fee) or your "Available cash"
+            input, whichever is higher. The buy path spends the upfront cost; the
+            rent path keeps everything invested. Each month, the cheaper path
+            invests the saving. The verdict only matches reality if you actually
+            do this every month.
           </p>
 
           <p>

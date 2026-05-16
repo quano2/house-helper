@@ -5,6 +5,7 @@ import type { Inputs } from './types'
 const baseInputs: Inputs = {
   housePrice: 350_000,
   depositAmount: 52_500,
+  availableCapital: 0,
   mortgageRate: 0.045,
   mortgageTermYears: 25,
   firstTimeBuyer: false,
@@ -106,4 +107,19 @@ describe('simulate', () => {
     expect(withMoves.years[24].rentNetWorth).toBeLessThan(noMoves.years[24].rentNetWorth)
   })
 
+  it('availableCapital above upfront invests the surplus in both paths', () => {
+    const noSurplus = simulate(baseInputs)
+    const withSurplus = simulate({
+      ...baseInputs,
+      availableCapital: baseInputs.depositAmount * 2 + 50_000, // well above K
+    })
+    expect(withSurplus.years[24].buyNetWorth).toBeGreaterThan(noSurplus.years[24].buyNetWorth)
+    expect(withSurplus.years[24].rentNetWorth).toBeGreaterThan(noSurplus.years[24].rentNetWorth)
+  })
+
+  it('availableCapital below upfront falls back to upfront (no negative surplus)', () => {
+    const baseline = simulate(baseInputs)
+    const tinyCapital = simulate({ ...baseInputs, availableCapital: 1000 })
+    expect(tinyCapital.years[24].rentNetWorth).toBeCloseTo(baseline.years[24].rentNetWorth, -1)
+  })
 })

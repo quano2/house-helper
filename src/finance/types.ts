@@ -2,6 +2,13 @@ export type Inputs = {
   // Purchase
   housePrice: number
   depositAmount: number // £ — capped at housePrice in the simulator
+  /**
+   * Total cash you can deploy at completion. If higher than the upfront buy
+   * cost, the surplus is invested in both buy AND rent scenarios — letting
+   * you compare different deposit sizes without "losing" the unspent cash
+   * from the comparison. 0 = use upfront buy cost (legacy behaviour).
+   */
+  availableCapital: number
   mortgageRate: number // annual, 0..1 (e.g. 0.045)
   mortgageTermYears: number
   firstTimeBuyer: boolean
