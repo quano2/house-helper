@@ -3,14 +3,18 @@ import { Hourglass } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { simulateWithDelay } from '../finance/simulate'
 import { formatGBP } from '../utils/format'
+import { displayValue, type DisplayMode } from '../utils/inflation'
 
 type Props = {
   inputs: Inputs
+  displayMode?: DisplayMode
 }
 
 const WAIT_OPTIONS = [0, 1, 2, 3, 5]
 
-export function WaitAnalysis({ inputs }: Props) {
+export function WaitAnalysis({ inputs, displayMode = 'nominal' }: Props) {
+  const isReal = displayMode === 'real'
+  const horizon = inputs.yearsToSimulate
   const rows = useMemo(
     () =>
       WAIT_OPTIONS.filter((w) => w < inputs.yearsToSimulate).map((wait) => {
@@ -19,14 +23,17 @@ export function WaitAnalysis({ inputs }: Props) {
         // House price at the moment of purchase (current × growth^wait years).
         const purchaseTimePrice =
           inputs.housePrice * Math.pow(1 + inputs.houseAppreciationAnnual, wait)
+        const rawDiff = final?.buyMinusRent ?? 0
         return {
           wait,
-          diff: final?.buyMinusRent ?? 0,
+          diff: displayValue(rawDiff, inputs.yearsToSimulate, displayMode),
           breakEvenYear: result.breakEvenYear,
+          // House price "then" is in nominal £ as of the purchase year — leave
+          // it nominal (it's the price tag you'd actually see at that time).
           purchaseTimePrice,
         }
       }),
-    [inputs],
+    [inputs, displayMode],
   )
 
   const winnerIdx = rows.reduce(
@@ -62,7 +69,10 @@ export function WaitAnalysis({ inputs }: Props) {
               <th className="text-left px-2 py-2 font-semibold">Wait</th>
               <th className="text-right px-2 py-2 font-semibold">House price then</th>
               <th className="text-right px-2 py-2 font-semibold">Break-even</th>
-              <th className="text-right px-2 py-2 font-semibold">Buy − Rent at year {inputs.yearsToSimulate}</th>
+              <th className="text-right px-2 py-2 font-semibold">
+                Buy − Rent at year {horizon}
+                {isReal && <span className="block font-normal normal-case tracking-normal text-stone-400">today's £</span>}
+              </th>
             </tr>
           </thead>
           <tbody>

@@ -14,10 +14,12 @@ import { Dices } from 'lucide-react'
 import type { Inputs } from '../finance/types'
 import { simulateMonteCarlo } from '../finance/monteCarlo'
 import { formatGBPCompact, formatPercent } from '../utils/format'
+import { displayValue, type DisplayMode } from '../utils/inflation'
 
 type Props = {
   inputs: Inputs
   isDark?: boolean
+  displayMode?: DisplayMode
 }
 
 const BUY_LIGHT = '#15803d'
@@ -25,19 +27,26 @@ const BUY_DARK = '#34d399'
 const RENT_LIGHT = '#b45309'
 const RENT_DARK = '#fbbf24'
 
-export function MonteCarloPanel({ inputs, isDark = false }: Props) {
+export function MonteCarloPanel({ inputs, isDark = false, displayMode = 'nominal' }: Props) {
   const result = useMemo(() => simulateMonteCarlo(inputs, 500), [inputs])
+  const isReal = displayMode === 'real'
 
   const chartData = useMemo(
     () =>
       result.years.map((y) => ({
         year: y.year,
-        buyBand: [Math.round(y.buyP5), Math.round(y.buyP95)],
-        buyMedian: Math.round(y.buyP50),
-        rentBand: [Math.round(y.rentP5), Math.round(y.rentP95)],
-        rentMedian: Math.round(y.rentP50),
+        buyBand: [
+          Math.round(displayValue(y.buyP5, y.year, displayMode)),
+          Math.round(displayValue(y.buyP95, y.year, displayMode)),
+        ],
+        buyMedian: Math.round(displayValue(y.buyP50, y.year, displayMode)),
+        rentBand: [
+          Math.round(displayValue(y.rentP5, y.year, displayMode)),
+          Math.round(displayValue(y.rentP95, y.year, displayMode)),
+        ],
+        rentMedian: Math.round(displayValue(y.rentP50, y.year, displayMode)),
       })),
-    [result],
+    [result, displayMode],
   )
 
   const pBuy = result.pBuyWinsAtHorizon
@@ -72,6 +81,11 @@ export function MonteCarloPanel({ inputs, isDark = false }: Props) {
         <div>
           <h3 className="text-sm font-semibold text-stone-900 dark:text-slate-100">
             How robust is the verdict?
+            {isReal && (
+              <span className="ml-2 font-normal text-xs text-stone-500 dark:text-slate-400">
+                (chart in today's £)
+              </span>
+            )}
           </h3>
           <p className="text-sm text-stone-600 dark:text-slate-400 mt-1 leading-relaxed">
             The verdict above assumes one fixed set of market conditions. In reality,

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Info, Receipt, TrendingDown, TrendingUp } from 'lucide-react'
 import type { Inputs, SimulationResult } from '../finance/types'
 import { formatGBP } from '../utils/format'
+import { displayValue, type DisplayMode } from '../utils/inflation'
 import { AssumptionsModal } from './AssumptionsModal'
 import { BreakEvenChart } from './BreakEvenChart'
 import { MonteCarloPanel } from './MonteCarloPanel'
@@ -12,12 +13,34 @@ type Props = {
   result: SimulationResult
   horizonYears: number
   isDark?: boolean
+  displayMode?: DisplayMode
 }
 
-export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: Props) {
+export function ResultsPanel({
+  inputs,
+  result,
+  horizonYears,
+  isDark = false,
+  displayMode = 'nominal',
+}: Props) {
   const [assumptionsOpen, setAssumptionsOpen] = useState(false)
   const finalYear = result.years[result.years.length - 1]
   const buyWins = finalYear ? finalYear.buyMinusRent >= 0 : false
+  const isReal = displayMode === 'real'
+
+  // Deflate horizon-year display values when in real mode.
+  const verdictAmount = finalYear
+    ? Math.abs(displayValue(finalYear.buyMinusRent, horizonYears, displayMode))
+    : 0
+  const horizonHouseValue = finalYear
+    ? displayValue(finalYear.houseValue, horizonYears, displayMode)
+    : 0
+  const horizonBuyNW = finalYear
+    ? displayValue(finalYear.buyNetWorth, horizonYears, displayMode)
+    : 0
+  const horizonRentNW = finalYear
+    ? displayValue(finalYear.rentNetWorth, horizonYears, displayMode)
+    : 0
 
   // In dark mode the body stays slate (matches every other card) but uses
   // a slightly lighter shade than the surrounding cards so the verdict
@@ -47,8 +70,13 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
               {buyWins ? 'Buying wins by' : 'Renting wins by'}
             </p>
             <p className={`mt-0.5 text-4xl sm:text-5xl font-bold tracking-tight tabular-nums ${verdictAccent}`}>
-              {finalYear ? formatGBP(Math.abs(finalYear.buyMinusRent)) : '—'}
+              {finalYear ? formatGBP(verdictAmount) : '—'}
             </p>
+            {isReal && (
+              <p className="mt-1 text-xs text-stone-600 dark:text-slate-400 italic">
+                In today's pounds (deflated at 2.5% CPI)
+              </p>
+            )}
             <p className="mt-3 text-sm text-stone-700 dark:text-slate-300">
               {result.breakEvenYear !== null
                 ? `Buying overtakes renting in year ${result.breakEvenYear}.`
@@ -67,8 +95,20 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
       </div>
 
       <div className="rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-        <h3 className="text-sm font-semibold text-stone-900 dark:text-slate-100 mb-4">Net wealth over time</h3>
-        <BreakEvenChart years={result.years} breakEvenYear={result.breakEvenYear} isDark={isDark} />
+        <h3 className="text-sm font-semibold text-stone-900 dark:text-slate-100 mb-4">
+          Net wealth over time
+          {isReal && (
+            <span className="ml-2 font-normal text-xs text-stone-500 dark:text-slate-400">
+              (today's £)
+            </span>
+          )}
+        </h3>
+        <BreakEvenChart
+          years={result.years}
+          breakEvenYear={result.breakEvenYear}
+          isDark={isDark}
+          displayMode={displayMode}
+        />
       </div>
 
       <MonthlyCostsCard inputs={inputs} monthlyMortgagePayment={result.monthlyMortgagePayment} />
@@ -78,8 +118,8 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {finalYear && (
           <StatCard
-            label={`House value in year ${horizonYears}`}
-            value={formatGBP(finalYear.houseValue)}
+            label={`House value in year ${horizonYears}${isReal ? " (today's £)" : ''}`}
+            value={formatGBP(horizonHouseValue)}
             hint="Today's price grown at your appreciation rate"
           />
         )}
@@ -93,23 +133,23 @@ export function ResultsPanel({ inputs, result, horizonYears, isDark = false }: P
       {finalYear && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <StatCard
-            label={`Buy net worth at year ${horizonYears}`}
-            value={formatGBP(finalYear.buyNetWorth)}
+            label={`Buy net worth at year ${horizonYears}${isReal ? " (today's £)" : ''}`}
+            value={formatGBP(horizonBuyNW)}
             hint="Sale proceeds − mortgage + any invested savings"
             tone="emerald"
           />
           <StatCard
-            label={`Rent net worth at year ${horizonYears}`}
-            value={formatGBP(finalYear.rentNetWorth)}
+            label={`Rent net worth at year ${horizonYears}${isReal ? " (today's £)" : ''}`}
+            value={formatGBP(horizonRentNW)}
             hint="Initial capital + monthly savings, invested"
             tone="amber"
           />
         </div>
       )}
 
-      <MonteCarloPanel inputs={inputs} isDark={isDark} />
+      <MonteCarloPanel inputs={inputs} isDark={isDark} displayMode={displayMode} />
 
-      <WaitAnalysis inputs={inputs} />
+      <WaitAnalysis inputs={inputs} displayMode={displayMode} />
     </div>
   )
 }

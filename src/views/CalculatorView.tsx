@@ -1,4 +1,5 @@
 import type { Inputs, SimulationResult } from '../finance/types'
+import type { DisplayMode } from '../utils/inflation'
 import { InputForm } from '../components/InputForm'
 import { ResultsPanel } from '../components/ResultsPanel'
 import { SavedScenarios } from '../components/SavedScenarios'
@@ -8,9 +9,10 @@ type Props = {
   setInputs: (inputs: Inputs) => void
   result: SimulationResult
   isDark: boolean
+  displayMode: DisplayMode
 }
 
-export function CalculatorView({ inputs, setInputs, result, isDark }: Props) {
+export function CalculatorView({ inputs, setInputs, result, isDark, displayMode }: Props) {
   return (
     <>
       <SavedScenarios current={inputs} onLoad={setInputs} />
@@ -25,6 +27,7 @@ export function CalculatorView({ inputs, setInputs, result, isDark }: Props) {
             result={result}
             horizonYears={inputs.yearsToSimulate}
             isDark={isDark}
+            displayMode={displayMode}
           />
         </section>
       </div>

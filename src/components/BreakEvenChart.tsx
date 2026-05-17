@@ -11,11 +11,13 @@ import {
 } from 'recharts'
 import type { YearResult } from '../finance/types'
 import { formatGBP, formatGBPCompact } from '../utils/format'
+import { displayValue, type DisplayMode } from '../utils/inflation'
 
 type Props = {
   years: YearResult[]
   breakEvenYear: number | null
   isDark?: boolean
+  displayMode?: DisplayMode
 }
 
 const BUY_LIGHT = '#15803d'
@@ -23,11 +25,16 @@ const BUY_DARK = '#34d399'
 const RENT_LIGHT = '#b45309'
 const RENT_DARK = '#fbbf24'
 
-export function BreakEvenChart({ years, breakEvenYear, isDark = false }: Props) {
+export function BreakEvenChart({
+  years,
+  breakEvenYear,
+  isDark = false,
+  displayMode = 'nominal',
+}: Props) {
   const data = years.map((y) => ({
     year: y.year,
-    buy: Math.round(y.buyNetWorth),
-    rent: Math.round(y.rentNetWorth),
+    buy: Math.round(displayValue(y.buyNetWorth, y.year, displayMode)),
+    rent: Math.round(displayValue(y.rentNetWorth, y.year, displayMode)),
   }))
 
   const buyColour = isDark ? BUY_DARK : BUY_LIGHT

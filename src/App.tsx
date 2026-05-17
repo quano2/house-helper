@@ -4,11 +4,13 @@ import { HeaderActions } from './components/HeaderActions'
 import { TabNav, type TabId } from './components/TabNav'
 import { simulate } from './finance/simulate'
 import { readInputsFromUrl, writeInputsToUrl } from './utils/url'
+import type { DisplayMode } from './utils/inflation'
 import { CalculatorView } from './views/CalculatorView'
 import { VisualisationsView } from './views/VisualisationsView'
 import { AboutView } from './views/AboutView'
 
 const THEME_STORAGE_KEY = 'house-helper:theme'
+const DISPLAY_MODE_KEY = 'house-helper:displayMode'
 
 function getInitialDark(): boolean {
   if (typeof window === 'undefined') return false
@@ -18,10 +20,17 @@ function getInitialDark(): boolean {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
+function getInitialDisplayMode(): DisplayMode {
+  if (typeof window === 'undefined') return 'nominal'
+  const stored = window.localStorage.getItem(DISPLAY_MODE_KEY)
+  return stored === 'real' ? 'real' : 'nominal'
+}
+
 function App() {
   const [inputs, setInputs] = useState(() => readInputsFromUrl())
   const [isDark, setIsDark] = useState(getInitialDark)
   const [activeTab, setActiveTab] = useState<TabId>('calculator')
+  const [displayMode, setDisplayMode] = useState<DisplayMode>(getInitialDisplayMode)
 
   useEffect(() => {
     writeInputsToUrl(inputs)
@@ -50,6 +59,18 @@ function App() {
     })
   }
 
+  function toggleDisplayMode() {
+    setDisplayMode((m) => {
+      const next: DisplayMode = m === 'real' ? 'nominal' : 'real'
+      try {
+        window.localStorage.setItem(DISPLAY_MODE_KEY, next)
+      } catch {
+        /* ignore */
+      }
+      return next
+    })
+  }
+
   const result = useMemo(() => simulate(inputs), [inputs])
 
   return (
@@ -63,10 +84,16 @@ function App() {
             <h1 className="text-3xl font-semibold tracking-tight text-stone-900 dark:text-slate-50">
               House Helper
             </h1>
-            <HeaderActions isDark={isDark} onToggleDark={toggleDark} />
+            <HeaderActions
+              isDark={isDark}
+              onToggleDark={toggleDark}
+              displayMode={displayMode}
+              onToggleDisplayMode={toggleDisplayMode}
+            />
           </div>
           <p className="mt-2 text-sm text-stone-700 dark:text-slate-300">
-            UK buy-vs-rent calculator for owner-occupiers. All numbers editable. Stamp duty rates: April 2025.
+            UK buy-vs-rent calculator for owner-occupiers. All numbers editable.
+            Calibration: SDLT April 2025, default mortgage rate &amp; LTV spreads May 2026 — verify before committing.
           </p>
         </div>
       </header>
@@ -80,10 +107,11 @@ function App() {
             setInputs={setInputs}
             result={result}
             isDark={isDark}
+            displayMode={displayMode}
           />
         )}
         {activeTab === 'visualisations' && (
-          <VisualisationsView inputs={inputs} isDark={isDark} />
+          <VisualisationsView inputs={inputs} isDark={isDark} displayMode={displayMode} />
         )}
         {activeTab === 'about' && <AboutView />}
 
