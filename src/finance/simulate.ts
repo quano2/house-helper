@@ -352,8 +352,10 @@ function findBreakEven(years: YearResult[]): number | null {
   const start = years[0]
   if (!start) return null
   const startSign = Math.sign(start.buyMinusRent)
+  // Use strict > 0 so wait-phase years (where both paths are identical and
+  // buyMinusRent is exactly 0) don't get counted as "buy overtook rent".
   for (const y of years) {
-    if (startSign <= 0 && y.buyMinusRent >= 0) return y.year
+    if (startSign <= 0 && y.buyMinusRent > 0) return y.year
   }
   if (startSign > 0) return 1
   return null
