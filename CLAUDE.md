@@ -1,6 +1,6 @@
 # House Helper — project context
 
-UK buy-vs-rent calculator for Joe's personal decision (and publicly available for anyone who finds it useful). Live at **https://quano2.github.io/house-helper/**. Repo: `quano2/house-helper` (public).
+UK buy-vs-rent calculator for the owner's personal decision (and publicly available for anyone who finds it useful). Live at **https://quano2.github.io/house-helper/**. Repo: `quano2/house-helper` (public).
 
 This doc captures **what's been decided and why**, especially the "tried and removed" things — so we don't keep re-litigating choices that have already been made.
 
@@ -80,7 +80,7 @@ README.md                 Public-facing summary
 
 - **Invest-the-difference is the only fair comparison.** Both paths start with same capital (deposit + stamp duty + legal + mortgage fee). The cheaper monthly path invests the difference at the investment return. The verdict assumes the renter actually does this every month — if they wouldn't, the rent path's real wealth is much lower.
 - **Investment returns assumed tax-free** (ISA-sheltered, £20k/yr limit). Realistic for typical deposit amounts.
-- **Mortgage rate held flat for the term.** Joe's explicit call: "you can't predict rates in 5 years anyway, modelling the reset is substituting one guess for another." **Don't reintroduce rate-reset modelling without asking.**
+- **Mortgage rate held flat for the term.** Owner's explicit call: "you can't predict rates in 5 years anyway, modelling the reset is substituting one guess for another." **Don't reintroduce rate-reset modelling without asking.**
 - **Selling cost applied at horizon** regardless of whether you'd actually sell. The verdict measures "potential wealth at horizon"; using the equity requires selling.
 - **Maintenance smoothed** (not lumpy). 1%/yr default is the long-run average.
 - **Council tax + utilities tracked** for monthly affordability display but **don't affect the verdict** (same both paths).
@@ -94,8 +94,8 @@ README.md                 Public-facing summary
 
 ### UI / UX
 
-- **Single layout: side-by-side** form + results on desktop, stacked on mobile. (Tried stacked / verdict-first / centred — Joe picked this.)
-- **Two themes: warm (light) and cool (dark).** Light = amber/orange/stone; dark = slate with sky accents. (Tried warm-dark, neutral-dark, cool-dark — Joe picked cool.) Dark follows OS preference by default; manual toggle persists in localStorage.
+- **Single layout: side-by-side** form + results on desktop, stacked on mobile. (Tried stacked / verdict-first / centred — owner picked this.)
+- **Two themes: warm (light) and cool (dark).** Light = amber/orange/stone; dark = slate with sky accents. (Tried warm-dark, neutral-dark, cool-dark — owner picked cool.) Dark follows OS preference by default; manual toggle persists in localStorage.
 - **Three tabs**: Calculator (default) / Visualisations / About. Tab state is per-session; URL preserves form inputs only.
 - **Modals for secondary content** (deposit comparison, assumptions). Native `<dialog>` element with `showModal()` — browser handles focus trap, escape, scroll lock.
 - **All numeric inputs**: £/% prefix inside the input, tabular-nums for digit alignment, local-text editing state (lets you backspace freely without React snapping value back), comma thousand separators when not focused.
@@ -117,15 +117,15 @@ README.md                 Public-facing summary
 
 ---
 
-## Joe's preferences (collaboration notes)
+## Owner's preferences (collaboration notes)
 
-- **Be exhaustive in brainstorms.** Don't pre-curate or filter for "what matters" — include small/minor items too, Joe will prune. Pre-filtering robs him of the call.
+- **Be exhaustive in brainstorms.** Don't pre-curate or filter for "what matters" — include small/minor items too, the owner will prune. Pre-filtering robs them of the call.
 - **Plain English over jargon.** HRAD → "Second home / buy-to-let". SDLT → "stamp duty". "Years to simulate" → "Time horizon" (renamed because the original didn't read as a real-world question).
-- **Push back where useful**, with reasons. Joe asks "should we do X?" expecting honest analysis, not a yes-bot.
-- **Honest about trade-offs** rather than overselling. He's specifically asked "are you happy with the maths" and similar — wants known limitations called out.
-- **Likes seeing options to choose between** — themes / layouts / dark variants / area pickers all built as 3-way selectors so he could pick. Same pattern works well for new design decisions.
+- **Push back where useful**, with reasons. The owner asks "should we do X?" expecting honest analysis, not a yes-bot.
+- **Honest about trade-offs** rather than overselling. Specifically asked "are you happy with the maths" and similar — wants known limitations called out.
+- **Likes seeing options to choose between** — themes / layouts / dark variants / area pickers all built as 3-way selectors to choose from. Same pattern works well for new design decisions.
 - **Project is personal, not a portfolio piece.** Don't inflate scope for "looking impressive". Public deployment is "in case anyone finds it useful", not a product.
-- **Joe is new to Mac dev.** Was set up at start of project (Homebrew, Node, gh CLI). All working now.
+- **Owner is new to Mac dev.** Was set up at start of project (Homebrew, Node, gh CLI). All working now.
 
 ---
 
@@ -157,8 +157,8 @@ These were considered and parked. Don't build without asking, but they're known 
 - **Sensitivity tornado chart** — show which inputs swing the verdict most. Cheap to build, surprisingly rare in calculators.
 - **Real vs nominal toggle** — switch between today's pounds and future pounds.
 - **Joint income mode** — two incomes, two LISAs, two ISA allowances.
-- **Lifestyle benefits / intangibles** layer — Joe explicitly parked this as "nice-to-have, optional, off by default". Don't add unless he asks.
-- **Furniture differential cost** — Joe explicitly said "don't add this, was a thought between us".
+- **Lifestyle benefits / intangibles** layer — owner explicitly parked this as "nice-to-have, optional, off by default". Don't add unless asked.
+- **Furniture differential cost** — owner explicitly said "don't add this".
 - **Save-for-deposit timeline** as a sibling tool — natural precursor question.
 - **Mortgage overpayment toggle** — model already shows optimal strategy at default rates; only matters in edge cases (low investment return).
 

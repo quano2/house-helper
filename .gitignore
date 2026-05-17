@@ -23,5 +23,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# Personal notes — not for the public repo
-JOE_THOUGHTS.md
+# Markdown docs default to ignored — explicit allow-list below.
+# Anything not listed here stays local and out of the public repo.
+*.md
+!README.md
+!CLAUDE.md
