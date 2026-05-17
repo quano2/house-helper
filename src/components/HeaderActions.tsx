@@ -26,21 +26,38 @@ export function HeaderActions({ isDark, onToggleDark, displayMode, onToggleDispl
     }
   }
 
+  const segBase =
+    'px-2.5 py-1 text-xs font-semibold rounded-full transition-colors'
+  const segActive =
+    'bg-orange-200/80 text-orange-900 shadow-sm dark:bg-sky-700 dark:text-sky-50'
+  const segInactive =
+    'text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-slate-200'
+
   return (
-    <div className="ml-auto flex items-center gap-1 print:hidden">
-      <button
-        type="button"
-        onClick={onToggleDisplayMode}
-        aria-label={isReal ? 'Switch to nominal pounds' : "Switch to today's pounds"}
-        title={isReal ? "Showing today's £ (deflated 2.5% CPI) — click for nominal" : "Showing nominal £ — click for today's pounds"}
-        className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors ${
-          isReal
-            ? 'bg-orange-100 text-orange-800 hover:bg-orange-200 dark:bg-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900'
-            : 'text-stone-700 dark:text-slate-300 hover:bg-amber-200/60 dark:hover:bg-slate-800'
-        }`}
+    <div className="ml-auto flex items-center gap-2 print:hidden">
+      <div
+        role="group"
+        aria-label="Display in nominal or today's pounds"
+        title="Nominal £ = future pounds. Today's £ = deflated at 2.5% CPI."
+        className="flex items-center gap-0.5 rounded-full bg-amber-100/80 dark:bg-slate-800 p-0.5"
       >
-        {isReal ? "Today's £" : 'Nominal £'}
-      </button>
+        <button
+          type="button"
+          onClick={() => { if (isReal) onToggleDisplayMode() }}
+          aria-pressed={!isReal}
+          className={`${segBase} ${!isReal ? segActive : segInactive}`}
+        >
+          Nominal £
+        </button>
+        <button
+          type="button"
+          onClick={() => { if (!isReal) onToggleDisplayMode() }}
+          aria-pressed={isReal}
+          className={`${segBase} ${isReal ? segActive : segInactive}`}
+        >
+          Today's £
+        </button>
+      </div>
       <button
         type="button"
         onClick={share}
