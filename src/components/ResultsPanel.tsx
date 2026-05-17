@@ -132,9 +132,13 @@ function MonthlyCostsCard({
 
   return (
     <div className="rounded-xl border border-stone-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
-      <h3 className="text-sm font-semibold text-stone-900 dark:text-slate-100 mb-4">
-        Year 1 monthly costs
+      <h3 className="text-sm font-semibold text-stone-900 dark:text-slate-100">
+        Year 1 monthly housing costs
       </h3>
+      <p className="text-xs text-stone-500 dark:text-slate-400 mt-0.5 mb-4">
+        Housing only — what each path pays for the roof. Council tax + utilities
+        are the same either way, so they're listed separately below.
+      </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
           <p className="text-xs uppercase tracking-wide font-semibold text-emerald-800 dark:text-emerald-500">
@@ -183,23 +187,25 @@ function MonthlyCostsCard({
       </p>
 
       {sharedMonthly > 0 && (
-        <div className="mt-3 pt-3 border-t border-stone-200 dark:border-slate-700 text-sm">
+        <div className="mt-4 pt-4 border-t border-stone-200 dark:border-slate-700 text-sm">
           <p className="text-xs uppercase tracking-wide font-semibold text-stone-600 dark:text-slate-400">
-            Plus, both paths also pay
+            Shared costs (same either way)
           </p>
           <p className="mt-1 text-stone-700 dark:text-slate-300">
+            Council tax + utilities ≈{' '}
             <span className="font-semibold tabular-nums text-stone-900 dark:text-slate-100">
               {formatGBP(sharedMonthly)}/month
-            </span>{' '}
-            for council tax + utilities. So your true monthly is roughly{' '}
+            </span>
+            . These cancel in the verdict (both paths pay them), but they matter
+            for affordability — your full monthly outgoings are roughly{' '}
             <span className="font-semibold tabular-nums text-stone-900 dark:text-slate-100">
               {formatGBP(buyTotal + sharedMonthly)}
             </span>{' '}
-            (buy) /{' '}
+            buying /{' '}
             <span className="font-semibold tabular-nums text-stone-900 dark:text-slate-100">
               {formatGBP(rent + sharedMonthly)}
             </span>{' '}
-            (rent).
+            renting.
           </p>
         </div>
       )}
