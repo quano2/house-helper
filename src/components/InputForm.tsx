@@ -299,7 +299,7 @@ export function InputForm({ inputs, onChange }: Props) {
           label="Investment return"
           prefix="%"
           unit="per year"
-          hint="Stocks long-run: ~7% nominal. Assumes ISA-sheltered."
+          hint="Blended ~4% (cash + Premium Bonds + some equities). Pure ISA equities long-run ~6–7%."
           value={inputs.investmentReturnAnnual}
           onChange={(v) => update('investmentReturnAnnual', v)}
           min={0}

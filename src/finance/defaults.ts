@@ -35,7 +35,11 @@ export const defaultInputs: Inputs = {
 
   houseAppreciationAnnual: 0.03,
   rentInflationAnnual: 0.03,
-  investmentReturnAnnual: 0.07,
+  // 4% is a realistic blended return for a typical UK saver — mix of cash
+  // savings (~4–5% easy access), Premium Bonds (~4% average prize rate), and
+  // some equities. A pure ISA-equity portfolio could justify 6–7%, but the
+  // default shouldn't assume everyone runs that allocation.
+  investmentReturnAnnual: 0.04,
 
   yearsToSimulate: 25,
 }
