@@ -111,6 +111,125 @@ export function AboutView() {
         </p>
       </Section>
 
+      <Section title="Should you wait for rates to drop?">
+        <p>
+          Probably not the right question to ask in isolation.
+        </p>
+        <p>
+          Rate cuts and house price rises tend to correlate — when borrowing
+          gets cheaper, demand returns and prices follow. So "waiting for a
+          lower rate" often comes paired with "paying more for the house plus
+          the rent you sunk in the meantime". The interest you'd save on the
+          mortgage is partially or fully eaten by the higher purchase price and
+          the months of rent.
+        </p>
+        <p>
+          The clear scenario where waiting wins is a <strong>recession-style
+          combination</strong>: rates fall <em>and</em> prices fall. That's the
+          2008-09 pattern. The typical post-hike normalisation — rates ease,
+          prices flatten or recover — is much closer to a wash.
+        </p>
+        <p>
+          A more useful framing: do you actually have a house you want to buy?
+          If yes, and the model's verdict works on realistic assumptions,
+          buying when you've found the right place tends to beat waiting for
+          rate-timing perfection. If no, you're not really "waiting for rates"
+          — you're waiting for a property, and the rate environment is
+          secondary. The WaitAnalysis card on the calculator tab lets you
+          test specific wait periods directly.
+        </p>
+      </Section>
+
+      <Section title="Beware the indefinite-wait failure mode">
+        <p>
+          The most common mistake in this decision isn't picking the wrong
+          time — it's <strong>indefinite deferral</strong>. People wait for
+          rates to drop. Then they wait to see if rates will drop more. Then
+          they wait to see if prices will react. Then they wait until they're
+          surer of their job. Then their partner. Then their location. Five
+          years pass; rent of £100k+ has been paid; no decision was made.
+        </p>
+        <p>
+          If you're going to wait, set a concrete trigger — &ldquo;I'll buy when
+          rates hit X%&rdquo;, &ldquo;when I've saved another £Y of
+          deposit&rdquo;, &ldquo;when I've been in this job for Z months&rdquo;.
+          Otherwise the wait becomes the decision by default.
+        </p>
+      </Section>
+
+      <Section title="What this model can't tell you">
+        <ul className="list-disc pl-6 space-y-1">
+          <li>
+            <strong>Whether you'll actually invest the difference.</strong> The
+            verdict assumes you put every monthly saving into investments. If
+            you'd spend it instead, the rent path's real wealth is much lower
+            than the model shows. The mortgage is a forced-savings vehicle for
+            many people — that's a real-world advantage not captured in pure
+            £-comparison.
+          </li>
+          <li>
+            <strong>Future rate or price moves.</strong> The model holds the
+            mortgage rate flat for the term and uses your single house-growth
+            assumption. Real rates change on remortgage; real prices follow
+            cycles. The Monte Carlo card shows how brittle the verdict is to
+            rate variance.
+          </li>
+          <li>
+            <strong>Your monthly savings beyond housing.</strong> The model
+            tracks your starting capital and the monthly difference between
+            buying and renting, but it has no concept of your salary or
+            additional savings rate. Absolute net-worth figures are
+            systematically lower than reality for that reason — but the Buy − Rent
+            comparison is unaffected (those savings apply equally to both
+            paths).
+          </li>
+          <li>
+            <strong>Risk tolerance.</strong> The verdict is pure expected
+            value. It doesn't weigh the certainty of paying down a mortgage
+            against the volatility of investment returns. Some people would
+            rather have a paid-off house and lower expected wealth than a
+            bigger portfolio and a landlord.
+          </li>
+          <li>
+            <strong>Whether you want this specific house.</strong> A model
+            saying "buying wins by £80k" doesn't mean the house you've found
+            is the right one. Lifestyle fit, location, schools, commute,
+            future flexibility — all real factors with no field in any
+            calculator.
+          </li>
+        </ul>
+      </Section>
+
+      <Section title="Sense-checks before committing">
+        <ul className="list-disc pl-6 space-y-1">
+          <li>
+            <strong>What's the price-to-rent ratio?</strong> Take the purchase
+            price and divide by the annual rent of an equivalent property. If
+            it's below ~18, buying tends to win comfortably. 18–25 is the grey
+            zone where assumptions matter. Above 25, renting tends to win
+            even with favourable rates.
+          </li>
+          <li>
+            <strong>Run multiple horizons.</strong> Try 5, 10, 15, 25 years. If
+            buying only wins at the longest horizon, you're committing to that
+            length. If it wins from year 5 onwards, you have flexibility.
+          </li>
+          <li>
+            <strong>Stress-test the assumptions.</strong> Set house growth to
+            0%, set investment return to your real expectation (not the
+            optimistic default), set rent inflation a bit higher. If buying
+            still wins, the verdict is robust. If it only wins with rosy
+            inputs, treat the answer as fragile.
+          </li>
+          <li>
+            <strong>Read the Monte Carlo percentage, not the deterministic
+            verdict.</strong> "Buy wins in 60% of futures" is a meaningfully
+            different statement from "buying wins by £80k". The percentage
+            tells you how robust the verdict is to plausible variance.
+          </li>
+        </ul>
+      </Section>
+
       <Section title="What this site is not">
         <ul className="list-disc pl-6 space-y-1">
           <li>Financial advice. It's a model.</li>
