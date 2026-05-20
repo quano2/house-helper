@@ -63,12 +63,16 @@ export function Field({
   const inputType = thousands ? 'text' : 'number'
 
   return (
-    <label className="block">
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="text-sm font-medium text-stone-700 dark:text-slate-300">{label}</span>
+    <label className="flex flex-col h-full">
+      {/* Fixed-height label row so the input box position is consistent
+          across the grid even when one label wraps and its neighbour
+          doesn't. min-h ≈ 1 line at text-sm; flex layout below pushes the
+          input down within the cell so inputs align in each grid row. */}
+      <div className="flex items-baseline justify-between gap-2 min-h-[1.25rem]">
+        <span className="text-sm font-medium text-stone-700 dark:text-slate-300 leading-snug">{label}</span>
         {unit &&
           (typeof unit === 'string' ? (
-            <span className="text-xs text-stone-500 dark:text-slate-500">{unit}</span>
+            <span className="text-xs text-stone-500 dark:text-slate-500 whitespace-nowrap">{unit}</span>
           ) : (
             unit
           ))}

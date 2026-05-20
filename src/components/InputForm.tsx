@@ -313,12 +313,12 @@ export function InputForm({ inputs, onChange }: Props) {
           asPercent
         />
         <Field
-          label={inputs.useDifferentReturnForBuy ? 'Investment return — rent path' : 'Investment return'}
+          label={inputs.useDifferentReturnForBuy ? 'Return (rent path)' : 'Investment return'}
           prefix="%"
-          unit="per year"
+          unit="/yr"
           hint={
             inputs.useDifferentReturnForBuy
-              ? 'Blended rate on your full cash pool (the rent path keeps everything invested).'
+              ? 'Blended rate on your full cash pool — the rent path keeps everything invested.'
               : 'Blended ~4% (cash + Premium Bonds + some equities). Pure ISA equities long-run ~6–7%.'
           }
           value={inputs.investmentReturnAnnual}
@@ -342,9 +342,9 @@ export function InputForm({ inputs, onChange }: Props) {
         </div>
         {inputs.useDifferentReturnForBuy && (
           <Field
-            label="Investment return — buy path"
+            label="Return (buy path)"
             prefix="%"
-            unit="per year"
+            unit="/yr"
             hint="Marginal rate on the cash that remains after the deposit. Often higher than your blended rate — e.g. if your cash savings (low rate) gets spent first, leaving Premium Bonds + ISA equities."
             value={inputs.investmentReturnBuyAnnual}
             onChange={(v) => update('investmentReturnBuyAnnual', v)}
