@@ -153,6 +153,23 @@ export function InputForm({ inputs, onChange }: Props) {
           value={inputs.firstTimeBuyer}
           onChange={(v) => update('firstTimeBuyer', v)}
         />
+        <div className="sm:col-span-2">
+          <Field
+            label="Total cash available"
+            prefix="£"
+            unit="optional"
+            hint={
+              inputs.useDifferentReturnForBuy
+                ? "Your whole investable cash pool. Required when the two-rate toggle is on — otherwise the model only invests the upfront cost (deposit + fees), under-counting both paths."
+                : "Leave at 0 to invest the upfront cost only (deposit + fees). Set to your real pool size if you have more cash beyond the deposit — the surplus then compounds on both paths and matters more once the two-rate toggle (Market assumptions) is on."
+            }
+            value={inputs.availableCapital}
+            onChange={(v) => update('availableCapital', v)}
+            min={0}
+            step={5000}
+            thousands
+          />
+        </div>
       </Section>
 
       <Section title="Buying — other costs" icon={Wallet}>

@@ -97,8 +97,11 @@ export function DepositComparison({
       const k = dep + fixedFees
       if (k > max) max = k
     }
-    return max
-  }, [inputs.housePrice, fixedFees])
+    // Honour the user's main-form availableCapital if they've set it higher —
+    // that's their real cash pool, and comparing deposits against a smaller
+    // synthetic pool would distort the surplus invested on each row.
+    return Math.max(max, inputs.availableCapital)
+  }, [inputs.housePrice, fixedFees, inputs.availableCapital])
 
   const rows = useMemo(
     () =>
