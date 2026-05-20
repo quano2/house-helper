@@ -23,6 +23,8 @@ const baseInputs: Inputs = {
   houseAppreciationAnnual: 0.03,
   rentInflationAnnual: 0.03,
   investmentReturnAnnual: 0.07,
+  useDifferentReturnForBuy: false,
+  investmentReturnBuyAnnual: 0.07,
   yearsToSimulate: 25,
 }
 

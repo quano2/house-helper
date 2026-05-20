@@ -1,6 +1,6 @@
 import type { Inputs } from './types'
 import { sampleNormal } from './random'
-import { simulateWithRates, type RatePaths } from './simulate'
+import { buyReturnRate, simulateWithRates, type RatePaths } from './simulate'
 
 /**
  * Standard deviations for annual return distributions. Calibrated from
@@ -85,6 +85,7 @@ export function simulateMonteCarlo(
 
 function samplePaths(inputs: Inputs): RatePaths {
   const n = inputs.yearsToSimulate
+  const buyMean = buyReturnRate(inputs)
   return {
     houseAppreciation: Array.from({ length: n }, () =>
       sampleNormal(inputs.houseAppreciationAnnual, VOLATILITY.houseAppreciation),
@@ -92,8 +93,11 @@ function samplePaths(inputs: Inputs): RatePaths {
     rentInflation: Array.from({ length: n }, () =>
       Math.max(0, sampleNormal(inputs.rentInflationAnnual, VOLATILITY.rentInflation)),
     ),
-    investmentReturn: Array.from({ length: n }, () =>
+    investmentReturnRent: Array.from({ length: n }, () =>
       sampleNormal(inputs.investmentReturnAnnual, VOLATILITY.investmentReturn),
+    ),
+    investmentReturnBuy: Array.from({ length: n }, () =>
+      sampleNormal(buyMean, VOLATILITY.investmentReturn),
     ),
   }
 }

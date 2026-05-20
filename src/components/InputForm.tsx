@@ -296,15 +296,45 @@ export function InputForm({ inputs, onChange }: Props) {
           asPercent
         />
         <Field
-          label="Investment return"
+          label={inputs.useDifferentReturnForBuy ? 'Investment return — rent path' : 'Investment return'}
           prefix="%"
           unit="per year"
-          hint="Blended ~4% (cash + Premium Bonds + some equities). Pure ISA equities long-run ~6–7%."
+          hint={
+            inputs.useDifferentReturnForBuy
+              ? 'Blended rate on your full cash pool (the rent path keeps everything invested).'
+              : 'Blended ~4% (cash + Premium Bonds + some equities). Pure ISA equities long-run ~6–7%.'
+          }
           value={inputs.investmentReturnAnnual}
-          onChange={(v) => update('investmentReturnAnnual', v)}
+          onChange={(v) =>
+            // When the toggle is OFF, keep the buy rate locked to the rent
+            // rate so flipping the toggle on doesn't show a stale number.
+            inputs.useDifferentReturnForBuy
+              ? update('investmentReturnAnnual', v)
+              : onChange({ ...inputs, investmentReturnAnnual: v, investmentReturnBuyAnnual: v })
+          }
           min={0}
           asPercent
         />
+        <div className="sm:col-span-2">
+          <ToggleField
+            label="Use a different rate for the buy path"
+            hint="Use if your cash is spread across rate tiers — you'd drain the lowest-yielding accounts first for the deposit, leaving the remaining cash skewed toward higher-yield accounts (e.g. Premium Bonds + ISA equities)."
+            value={inputs.useDifferentReturnForBuy}
+            onChange={(v) => update('useDifferentReturnForBuy', v)}
+          />
+        </div>
+        {inputs.useDifferentReturnForBuy && (
+          <Field
+            label="Investment return — buy path"
+            prefix="%"
+            unit="per year"
+            hint="Marginal rate on the cash that remains after the deposit. Often higher than your blended rate — e.g. if your cash savings (low rate) gets spent first, leaving Premium Bonds + ISA equities."
+            value={inputs.investmentReturnBuyAnnual}
+            onChange={(v) => update('investmentReturnBuyAnnual', v)}
+            min={0}
+            asPercent
+          />
+        )}
         <Field
           label="Time horizon"
           unit="years"

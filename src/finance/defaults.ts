@@ -40,6 +40,14 @@ export const defaultInputs: Inputs = {
   // some equities. A pure ISA-equity portfolio could justify 6–7%, but the
   // default shouldn't assume everyone runs that allocation.
   investmentReturnAnnual: 0.04,
+  // Default off — most users have one or two accounts and the rate
+  // differential is small. Turn on if your cash is spread across rate tiers
+  // (e.g. cash savings + Premium Bonds + ISA equities) and you'd drain the
+  // low-yield ones first for the deposit.
+  useDifferentReturnForBuy: false,
+  // Same as the blended rate by default. When the toggle is on, edit this to
+  // your marginal rate on the cash that would remain after the deposit.
+  investmentReturnBuyAnnual: 0.04,
 
   yearsToSimulate: 25,
 }

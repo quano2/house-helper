@@ -5,11 +5,18 @@ import { monthlyMortgagePayment, balanceAfterMonths } from './mortgage'
 /**
  * Per-year rate arrays. Length must equal `yearsToSimulate`. Each entry
  * is the annual rate for that simulation year (0-indexed: index 0 = year 1).
+ *
+ * investmentReturnRent and investmentReturnBuy let each path compound at a
+ * different rate — captures the real-world reality that the cash remaining
+ * after a deposit (typically the higher-yielding accounts) doesn't compound
+ * at the same blended rate as the full pool. Set them equal for the simple
+ * single-rate model.
  */
 export type RatePaths = {
   houseAppreciation: number[]
   rentInflation: number[]
-  investmentReturn: number[]
+  investmentReturnRent: number[]
+  investmentReturnBuy: number[]
 }
 
 /**
@@ -78,13 +85,17 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
 
   // Updated at the start of each year from the rate arrays
   let monthlyAppreciation = 0
-  let monthlyInvestmentReturn = 0
+  let monthlyInvestmentReturnRent = 0
+  let monthlyInvestmentReturnBuy = 0
 
   for (let month = 1; month <= totalMonths; month++) {
     if (month === 1 || month % 12 === 1) {
       const yearIdx = Math.floor((month - 1) / 12)
       monthlyAppreciation = Math.pow(1 + rates.houseAppreciation[yearIdx], 1 / 12) - 1
-      monthlyInvestmentReturn = Math.pow(1 + rates.investmentReturn[yearIdx], 1 / 12) - 1
+      monthlyInvestmentReturnRent =
+        Math.pow(1 + rates.investmentReturnRent[yearIdx], 1 / 12) - 1
+      monthlyInvestmentReturnBuy =
+        Math.pow(1 + rates.investmentReturnBuy[yearIdx], 1 / 12) - 1
     }
 
     const mortgageBalance = balanceAfterMonths(
@@ -110,8 +121,8 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
     if (diff > 0) rentCash += diff
     else if (diff < 0) buyCash += -diff
 
-    rentCash *= 1 + monthlyInvestmentReturn
-    buyCash *= 1 + monthlyInvestmentReturn
+    rentCash *= 1 + monthlyInvestmentReturnRent
+    buyCash *= 1 + monthlyInvestmentReturnBuy
 
     houseValue *= 1 + monthlyAppreciation
 
@@ -159,6 +170,16 @@ export function simulateWithRates(inputs: Inputs, rates: RatePaths): SimulationR
 }
 
 /**
+ * Resolve the effective buy-path return rate from inputs. Falls back to the
+ * unified rate unless useDifferentReturnForBuy is on.
+ */
+export function buyReturnRate(inputs: Inputs): number {
+  return inputs.useDifferentReturnForBuy
+    ? inputs.investmentReturnBuyAnnual
+    : inputs.investmentReturnAnnual
+}
+
+/**
  * Public API — deterministic simulation using the constant rates from inputs.
  * Convenience wrapper around simulateWithRates.
  */
@@ -167,7 +188,8 @@ export function simulate(inputs: Inputs): SimulationResult {
   return simulateWithRates(inputs, {
     houseAppreciation: Array(n).fill(inputs.houseAppreciationAnnual),
     rentInflation: Array(n).fill(inputs.rentInflationAnnual),
-    investmentReturn: Array(n).fill(inputs.investmentReturnAnnual),
+    investmentReturnRent: Array(n).fill(inputs.investmentReturnAnnual),
+    investmentReturnBuy: Array(n).fill(buyReturnRate(inputs)),
   })
 }
 
@@ -188,17 +210,27 @@ export function simulateWithDelay(
 ): SimulationResult {
   if (delayYears <= 0) return simulate(inputs)
   if (delayYears >= inputs.yearsToSimulate) {
-    // Effectively never buying — just rent for the whole horizon
+    // Effectively never buying — just rent for the whole horizon. Both paths
+    // stay invested at the rent (blended) rate since no purchase ever happens.
     const n = inputs.yearsToSimulate
     return simulateWithRates({ ...inputs, depositAmount: 0 }, {
       houseAppreciation: Array(n).fill(inputs.houseAppreciationAnnual),
       rentInflation: Array(n).fill(inputs.rentInflationAnnual),
-      investmentReturn: Array(n).fill(inputs.investmentReturnAnnual),
+      investmentReturnRent: Array(n).fill(inputs.investmentReturnAnnual),
+      investmentReturnBuy: Array(n).fill(inputs.investmentReturnAnnual),
     })
   }
 
-  const monthlyReturn =
+  // During the wait, both paths invest the full pool at the BLENDED rate
+  // (no purchase yet, so the buy path's portfolio mix is identical to the
+  // rent path's). After purchase, the buy path's remaining cash compounds at
+  // the buy rate.
+  const monthlyReturnDuringWait =
     Math.pow(1 + inputs.investmentReturnAnnual, 1 / 12) - 1
+  const monthlyReturnRentPath =
+    Math.pow(1 + inputs.investmentReturnAnnual, 1 / 12) - 1
+  const monthlyReturnBuyPath =
+    Math.pow(1 + buyReturnRate(inputs), 1 / 12) - 1
   const monthlyAppreciation =
     Math.pow(1 + inputs.houseAppreciationAnnual, 1 / 12) - 1
 
@@ -226,10 +258,10 @@ export function simulateWithDelay(
   const years: YearResult[] = []
   let annualRentAccum = 0
 
-  // Wait phase — both paths identical, just rent + invest
+  // Wait phase — both paths identical, just rent + invest at the blended rate
   for (let month = 1; month <= waitMonths; month++) {
     annualRentAccum += rent
-    cash *= 1 + monthlyReturn
+    cash *= 1 + monthlyReturnDuringWait
     houseValue *= 1 + monthlyAppreciation
 
     if (month % 12 === 0) {
@@ -303,8 +335,8 @@ export function simulateWithDelay(
     if (diff > 0) rentCash += diff
     else if (diff < 0) buyCash += -diff
 
-    rentCash *= 1 + monthlyReturn
-    buyCash *= 1 + monthlyReturn
+    rentCash *= 1 + monthlyReturnRentPath
+    buyCash *= 1 + monthlyReturnBuyPath
     buyHouseValue *= 1 + monthlyAppreciation
 
     if (month % 12 === 0) {

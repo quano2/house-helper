@@ -38,7 +38,19 @@ export type Inputs = {
   // Market assumptions (annual, 0..1)
   houseAppreciationAnnual: number
   rentInflationAnnual: number
+  /** Blended return on the rent path's invested capital. Used for both
+   *  paths unless useDifferentReturnForBuy is true. */
   investmentReturnAnnual: number
+  /** When true, the buy path's invested cash compounds at
+   *  investmentReturnBuyAnnual instead. Models the real-world reality that
+   *  someone with cash spread across rate tiers (e.g. cash savings + Premium
+   *  Bonds + ISA equities) would drain the lowest-yielding accounts first
+   *  for the deposit — pushing the average rate on the remaining cash up. */
+  useDifferentReturnForBuy: boolean
+  /** Rate on the cash that remains after the deposit goes down — typically
+   *  higher than the blended rate because the low-yield accounts are spent
+   *  first. Only used when useDifferentReturnForBuy is true. */
+  investmentReturnBuyAnnual: number
 
   // Horizon
   yearsToSimulate: number
